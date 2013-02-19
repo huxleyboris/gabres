@@ -5,7 +5,7 @@ body {
   line-height: 18px;
 }
 
-nav {
+#menu {
   margin: 0;
   padding: 7px 6px 0;
   line-height: 100%;
@@ -24,7 +24,7 @@ nav {
 
   border: solid 1px #6d6d6d;
 }
-nav ul li {
+#menu ul li {
   margin: 0 5px;
   padding: 0 0 8px;
   float: left;
@@ -32,7 +32,7 @@ nav ul li {
   list-style: none;
 }
 /* main level link */
-nav ul a {
+#menu ul li a {
   font-weight: bold;
   color: #e7e5e5;
   text-decoration: none;
@@ -43,8 +43,9 @@ nav ul a {
   -moz-border-radius: 1.6em;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
+
 /* main level link hover */
-nav ul .selected a, nav ul li:hover > a {
+#menu ul li.selected a, #menu ul li:hover > a {
   background: #d1d1d1; /* for non-css3 browsers */
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
   background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
@@ -57,19 +58,26 @@ nav ul .selected a, nav ul li:hover > a {
   box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
   text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
 }
+
+#menu ul li:hover > a {
+  color: #ffffff;
+}
+
 /* sub levels link hover */
-nav ul ul li:hover a, nav li:hover li a {
+#menu ul ul li:hover a, #menu ul li:hover li a {
   background: none;
   border: none;
   color: #666;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
 }
-nav ul ul a:hover {
+#menu ul ul a:hover {
   background: #0399d4 !important; /* for non-css3 browsers */
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#04acec', endColorstr='#0186ba'); /* for IE */
   background: -webkit-gradient(linear, left top, left bottom, from(#04acec), to(#0186ba)) !important; /* for webkit browsers */
   background: -moz-linear-gradient(top,  #04acec,  #0186ba) !important; /* for firefox 3.6+ */
+ 
+  display:block;
 
   color: #fff !important;
   -webkit-border-radius: 0;
@@ -78,7 +86,7 @@ nav ul ul a:hover {
 }
 
 /* level 2 list */
-nav ul ul {
+#menu ul ul {
   background: #ddd; /* for non-css3 browsers */
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
   background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
@@ -101,33 +109,33 @@ nav ul ul {
 }
 
 /* dropdown */
-nav ul li:hover > ul {
+#menu ul li:hover > ul {
   display: block;
 }
-nav ul ul li {
+#menu ul ul li {
   float: none;
   margin: 0;
   padding: 0;
 }
-nav ul ul a {
+#menu ul ul a {
   font-weight: normal;
   text-shadow: 0 1px 1px rgba(255, 255, 255, .9);
 }
 
 /* level 3+ list */
-nav ul ul ul {
+#menu ul ul ul {
   left: 181px;
   top: -3px;
 }
 
 /* rounded corners for first and last child */
-nav ul ul li .first > a {
+#menu ul ul li.first > a {
   -webkit-border-top-left-radius: 9px;
   -moz-border-radius-topleft: 9px;
   -webkit-border-top-right-radius: 9px;
   -moz-border-radius-topright: 9px;
 }
-nav ul ul li .last > a {
+#menu ul ul li.last > a {
   -webkit-border-bottom-left-radius: 9px;
   -moz-border-radius-bottomleft: 9px;
   -webkit-border-bottom-right-radius: 9px;
@@ -135,7 +143,7 @@ nav ul ul li .last > a {
 }
 
 /* clearfix */
-nav:after {
+#menu:after {
   content: ".";
   display: block;
   clear: both;
