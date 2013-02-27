@@ -1,12 +1,10 @@
 body {
-  // background: #f0f0f0 image_url('refinery/mosaic.jpg') repeat;
   background: #E0F8F7;
   font-family: arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   
   margin: 0;
-  padding: 0;
   padding-top: 20px;
   text-align: center;
 }
@@ -22,10 +20,11 @@ body {
 
 #body_content_title {
   visibility: hidden;
+  height: 0%;
 }
 
 #page {
-  padding: 20px 20px 20px 20px;  
+  padding: 20px;  
 }
 
 #logo a:link, #logo a:visited {
@@ -73,6 +72,9 @@ footer {
 }
 
 #menu {
+  position: relative;
+  z-index: 1000;
+  
   margin: 0 auto;
   padding: 0px 0px 3px 0px;
   line-height: 100%;
@@ -102,6 +104,7 @@ footer {
   position: relative;
   list-style: none;
 }
+
 /* main level link */
 #menu ul li a {
   font-weight: bold;
@@ -224,32 +227,45 @@ footer {
   height: 0;
 }
 
+/* Image gallery */
+
 .img {
-  -webkit-transform:scale(0.8);
-  float:left;
-  -webkit-transition-duration: 0.5s;
+  float: left;
+  -webkit-transform: scale(0.75);
+  line-height: 75%;
+  -webkit-transition-duration: 0.3s;
+  
+  position: relative;
+  z-index: 1;
 }
-.img a img {
-  padding:10px;
-  border:1px solid #fff;
+
+.img > a > img {
+  padding: 5px;
+  border: 1px solid #ffffff;
+  background: #E0F8F7;
 }
+
 .img:hover {
-  -webkit-transform:scale(1);
-  -webkit-box-shadow:0px 0px 30px #ccc;
+  -webkit-transform: scale(1.75);
+  -webkit-box-shadow: 0px 0px 30px black;
+  
+  position: relative;
+  z-index: 1001;
 }
-.img .mask {
+
+.img > .mask {
+  height: 100%;
   width: 100%;
   background-color: rgb(0, 0, 0);
   position: absolute;
-  height: 100%;
   opacity: 0.3;
   cursor: pointer;
   -webkit-transition-duration: 0.3s;
 }
 
-.img:hover .mask {
+.img:hover > .mask {
   height: 0%;
-  margin-top:130px;
+  margin-top: 50%;
 }
 
 #gallery {
@@ -258,13 +274,11 @@ footer {
     margin-left: auto;
     margin-right: auto;
     overflow: visible;
+    padding: 10px;
+    text-align: center;
 }
 
-#gallery li {
-    /* In order to create the proper effect with hover we should use display inline-table
-        This will display the big picture right next to its thumbnail
-    */
-    list-style:none; 
-    display:inline-table; 
-    padding:10px;
+#gallery > li {
+    list-style: none; 
+    display: inline-table; 
 }
