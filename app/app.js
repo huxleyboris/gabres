@@ -5,7 +5,9 @@
 	  .config(function ($routeProvider) {
 	    $routeProvider
 				.when('/products', {
-					templateUrl: 'assets/partials/products.html'
+					templateUrl: 'assets/partials/products.html',
+					controller: 'ProductController',
+					controllerAs: 'productCtrl'
 				})
 				.when('/contact', {
 					templateUrl: 'assets/partials/contact.html'

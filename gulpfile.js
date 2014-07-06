@@ -45,6 +45,11 @@ gulp.task('fonts', function(){
         .pipe(gulp.dest('./build/fonts'));
 });
 
+gulp.task('favicon', function(){
+    gulp.src(['./app/favicon.ico'])
+        .pipe(gulp.dest('./build'));
+});
+
 gulp.task('copy-index', function() {
     gulp.src('./app/index.html')
         .pipe(gulp.dest('./build'));
@@ -74,4 +79,4 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('default',['connect','scripts','templates','fonts','css','copy-index','vendorJS','vendorCSS','watch']);
+gulp.task('default',['connect','scripts','templates','fonts', 'favicon','css','copy-index','vendorJS','vendorCSS','watch']);
