@@ -1,24 +1,10 @@
 <div>
-    <span ng-repeat="product in productCtrl.products">
-      <h4>{{product.name}} <i ng-show="product.isMountable" class="text-primary fa fa-exclamation-circle" popover="¡También se montan en obra!" popover-trigger="mouseenter"></i></h4>
-      <div class="image-gallery">
-        <carousel interval="5000">
-          <slide ng-repeat="image in product.images" active="image.active">
-            <img ng-src="{{image.url}}" style="margin:auto;">
-          </slide>
-        </carousel>
-      </div>
-      <h5>Características</h5>
-      <ul>
-        <li ng-repeat="characteristic in product.characteristics">
-          {{characteristic}}
-        </li>
-      </ul>
-      <h5>Accesorios incluídos</h5>
-      <ul>
-        <li ng-repeat="accessory in product.accessories">
-          {{accessory}}
-        </li>
-      </ul>
-    </span>
+  <accordion close-others="true">
+    <product-line ng-repeat="line in lineCtrl.lines"></product-line>
+  </accordion>
+</div>
+<div>
+  <accordion close-others="true">
+    <product-line ng-init="line = lineCtrl.otherWorks"></product-line>
+  </accordion>
 </div>

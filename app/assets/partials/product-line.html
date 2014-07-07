@@ -1,0 +1,23 @@
+<accordion-group is-open="open">
+  <accordion-heading>
+    <h4>{{line.name}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': open, 'glyphicon-chevron-right': !open}"></i></h4>
+  </accordion-heading>
+  <div class="col-md-8 text-center">
+    <p class="text-justify">{{line.description}}</p>
+    <div class="image-gallery">
+      <carousel interval="5000">
+        <slide ng-repeat="image in line.images" active="image.active">
+          <img ng-src="{{image.url}}" style="margin:auto;">
+        </slide>
+      </carousel>
+    </div>
+  </div>
+  <div class="col-md-4 text-center">
+    <div class="list-group">
+      <a href="#" class="list-group-item" ng-repeat="product in line.products">
+        <h5 class="list-group-item-heading">{{product.name}}</h5>
+        <p class="list-group-item-text">{{product.description}}</p>
+      </a>
+    </div>
+  </div>
+</accordion-group>

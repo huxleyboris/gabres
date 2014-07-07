@@ -6,9 +6,14 @@
 	    $routeProvider
 				.when('/products', {
 					templateUrl: 'assets/partials/products.html',
-					controller: 'ProductController',
-					controllerAs: 'productCtrl'
+					controller: 'ProductLinesController',
+					controllerAs: 'lineCtrl'
 				})
+					.when('/products/1', {
+						templateUrl: 'assets/partials/product-lines.html',
+						controller: 'ProductController',
+						controllerAs: 'productCtrl'
+					})
 				.when('/contact', {
 					templateUrl: 'assets/partials/contact.html'
 				})
