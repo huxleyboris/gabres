@@ -8,6 +8,14 @@
           templateUrl: 'main/main.html'
       });
     })
+    .controller('ContactController', function($modal) {
+      this.openDialog = function() {
+        $modal.open({
+          templateUrl: 'assets/partials/contact-form.html',
+          size: 'lg'
+        });
+      };
+    })
     .controller('ProductController', function($scope, $modalInstance, product) {
       $scope.product = product;
 
@@ -38,7 +46,7 @@
           products: [
             {
               name: 'DC - Cilíndrico vertical de superficie',
-              description: 'Una descripción del producto',
+              description: 'Una descripción del producto que de repente se vuelve insorportablemente larga. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ornare, justo sed vulputate dictum, ante urna tempor ligula, a tincidunt nulla libero tincidunt leo. Vivamus at dictum turpis, sed dignissim sem. Morbi vulputate nulla non cursus ullamcorper. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec elementum placerat nulla, faucibus varius quam euismod non. Nulla facilisi. Aliquam at velit non eros bibendum aliquam. Pellentesque ut sagittis arcu, sit amet tincidunt lectus. Pellentesque convallis pretium porta. Sed sit amet lacinia sem, pulvinar porttitor lectus. Cras suscipit urna non arcu sagittis accumsan. Nunc laoreet tellus a metus rhoncus, in porta tellus suscipit. Nunc blandit nisi vel nisl pellentesque, at luctus lorem fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. In at condimentum sem. Morbi magna justo, pulvinar nec lectus et, tincidunt iaculis purus.',
               isMountable: true,
               images: [
                 { url: 'http://prgabres.com/pruebaa004001.jpg' }

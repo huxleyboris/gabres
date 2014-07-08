@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('gabres', [ 'ngRoute','gabres-main','templates' ])
+	angular.module('gabres', [ 'ngRoute','gabres-main','templates'])
 	  .config(function ($routeProvider) {
 	    $routeProvider
 				.when('/products', {
@@ -9,13 +9,10 @@
 					controller: 'ProductLinesController',
 					controllerAs: 'lineCtrl'
 				})
-					.when('/products/1', {
-						templateUrl: 'assets/partials/product-lines.html',
-						controller: 'ProductController',
-						controllerAs: 'productCtrl'
-					})
 				.when('/contact', {
-					templateUrl: 'assets/partials/contact.html'
+					templateUrl: 'assets/partials/contact.html',
+					controller: 'ContactController',
+					controllerAs: 'contactCtrl'
 				})
 	      .otherwise({
 	        redirectTo: '/'
