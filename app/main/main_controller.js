@@ -123,7 +123,22 @@
         }
       ];
     })
-    .controller('ProductLinesController', function() {
+    .controller('ProductLinesController', function($modal) {
+      this.open = function(product) {
+        console.log('opening modal for ' + product.name);
+        $modal.open({
+          templateUrl: 'assets/partials/product.html',
+          controller: function($scope, $modalInstance) {
+            $scope.product = product;
+
+            $scope.cancel = function() {
+              $modalInstance.dismiss('cancel');
+            };
+          },
+          controllerAs: 'ctrl'
+        });
+      };
+
       this.lines = [
         {
           name: 'Almacenamiento de Líquidos',

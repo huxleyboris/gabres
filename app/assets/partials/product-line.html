@@ -14,7 +14,7 @@
   </div>
   <div class="col-md-4 text-center">
     <div class="list-group">
-      <a href="#" class="list-group-item" ng-repeat="product in line.products">
+      <a class="list-group-item" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
         <h5 class="list-group-item-heading">{{product.name}}</h5>
         <p class="list-group-item-text">{{product.description}}</p>
       </a>

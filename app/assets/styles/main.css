@@ -16,3 +16,11 @@
 .page-header {
   margin-top: 0;
 }
+
+
+
+.modal {
+	display: block;
+  margin: 0;
+  padding: 0;
+}
