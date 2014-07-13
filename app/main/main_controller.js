@@ -36,8 +36,15 @@
         });
       };
 
+      this.allLines = function() {
+        var copy = this.lines.slice(0);
+        copy.push(this.otherWorks);
+        return copy;
+      };
+
       this.lines = [
         {
+          id: 'alma-liq',
           name: 'Almacenamiento de Líquidos',
           description: 'Disponemos de diversos modelos de depósitos abarcando todas las necesidades del instalador:\nCilíndricos, rectangulares, especiales bajo rampa, horizontales con pies de soporte, para enterrar, etc.\nTrabajamos a medida, es decir, con cualquier diámetro y altura según disponibilidad de espacio.\nUtilizando el tipo de resina adecuado para cada caso fabricamos depósitos para contención de agua potable, sistemas contraincendios, combustibles, químicos, abonos y productos alimenticios en general.\nRealizamos montaje de depósitos en el lugar final donde irán instalados con nuestros equipos de profesionales. (ver en Servicios -> Montaje en obra).',
           images: [
@@ -158,6 +165,7 @@
           ]
         },
         {
+          id: 'tratamiento-aguas',
           name: 'Tratamiento de Aguas',
           description: 'Sistemas de depuración para aguas residuales de uso doméstico con el objetivo de conseguir una calidad de vertido dentro de los parámentros establecidos por la normativa europea.',
           images: [
@@ -165,6 +173,7 @@
           ]
         },
         {
+          id: 'revestimientos-impermeabilizacion',
           name: 'Revestimientos / Impermeabilización',
           description: 'Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha,  cubiertas, naves industriales, etc.\nCaracterísticas:\n- Rapidez en la ejecución.\n- Mínimo mantenimiento.\n- Fácil de limpiar.\n- Distintos colores.',
           images: [
@@ -172,6 +181,7 @@
           ]
         },
         {
+          id: 'linea-nautica',
           name: 'Línea Náutica',
           description: 'Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.\nRealizamos también reparaciones de cascos y cubiertas.',
           images: [
@@ -181,59 +191,9 @@
       ];
 
       this.otherWorks = {
+        id: 'trabajos-especiales',
         name: 'Trabajos Especiales',
         description: 'Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie. Todo en poliester y fibras de vidrio. ¡Consúltenos!'
-      };
-    })
-    .directive('menuBar', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'assets/partials/menu-bar.html',
-        controllerAs: 'menu',
-        controller: function() {
-          this.items = [
-            {name:'Inicio'},
-            {name:'Productos', subitems: [
-              {name:'Almacenamiento de Líquidos'},
-              {name:'Tratamiento de Aguas'},
-              {name:'Revestimientos'},
-              {name:'Línea Náutica'},
-              {name:'Trabajos Especiales'}
-            ]},
-            {name:'Servicios'},
-            {name:'Galería'},
-            {name:'Enlaces'},
-            {name:'Contacto'}
-          ];
-
-          this.shouldShowSubitems = function(item) {
-            return item.subitems && item.subitems.length > 0;
-          };
-        }
-      };
-    })
-    .directive('appFooter', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'assets/partials/app-footer.html'
-      };
-    })
-    .directive('product', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'assets/partials/product.html'
-      };
-    })
-    .directive('productLine', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'assets/partials/product-line.html'
-      };
-    })
-    .directive('headerBar', function() {
-      return {
-        restrict: 'E',
-        templateUrl: 'assets/partials/header-bar.html'
       };
     });
 

@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('gabres', [ 'ngRoute','gabres-main','templates'])
+	angular.module('gabres', [ 'ngRoute','gabres-main', 'gabres-directives','templates'])
 	  .config(function ($routeProvider) {
 	    $routeProvider
 				.when('/products', {
