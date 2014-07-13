@@ -25,7 +25,7 @@
       {
         name:'Servicios',
         path: '/services',
-        // templateUrl: 'assets/partials/services.html',
+        templateUrl: 'assets/partials/services.html'
       },
       {
         name:'Galería',
@@ -33,7 +33,8 @@
       },
       {
         name:'Enlaces',
-        path: '/links'
+        path: '/links',
+        templateUrl: 'assets/partials/links.html'
       },
       {
         name: 'Contacto',
