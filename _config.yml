@@ -1,3 +1,4 @@
 
 production_url : http://moliva.github.io/gabres
 baseurl: /gabres
+BASE_PATH: http://moliva.github.io/gabres
