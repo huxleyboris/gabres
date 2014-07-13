@@ -137,7 +137,7 @@
         }
       };
     })
-    .directive('content', function ($compile) {
+    .directive('content', function($compile) {
       var linker = function(scope, element, attrs) {
         element.html(attrs.template).show();
         $compile(element.contents())(scope);
@@ -150,6 +150,58 @@
           scope: {
               content:'='
           }
+      };
+    })
+    .directive('map', function() {
+      return {
+        restrict: 'E',
+        templateUrl: 'assets/partials/map.html',
+        controller: function ($scope) {
+
+          var location = {
+            lat: 38.3193894,
+            long: -0.5553162,
+            city: 'Gabres S.L.',
+            desc: 'Plásticos Reforzados'
+          };
+
+          var mapOptions = {
+              zoom: 16,
+              center: new google.maps.LatLng(location.lat, location.long),
+              mapTypeId: google.maps.MapTypeId.HYBRID
+          };
+
+          $scope.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+          $scope.markers = [];
+
+          var infoWindow = new google.maps.InfoWindow();
+
+          var createMarker = function (info) {
+
+            var marker = new google.maps.Marker({
+                map: $scope.map,
+                position: new google.maps.LatLng(info.lat, info.long),
+                title: info.city
+            });
+
+            marker.content = '<div class="infoWindowContent">' + info.desc + '</div>';
+
+            google.maps.event.addListener(marker, 'click', function(){
+              infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
+              infoWindow.open($scope.map, marker);
+            });
+
+            $scope.markers.push(marker);
+          };
+
+          createMarker(location);
+
+          $scope.openInfoWindow = function(e, selectedMarker){
+            e.preventDefault();
+            google.maps.event.trigger(selectedMarker, 'click');
+          };
+        }
       };
     });
 })();
