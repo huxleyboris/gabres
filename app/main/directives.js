@@ -1,30 +1,21 @@
 (function() {
   'use strict';
 
-  angular.module('gabres-directives', [])    
+  angular.module('gabres-directives', ['gabres-routes'])
     .directive('menuBar', function() {
       return {
         restrict: 'E',
         templateUrl: 'assets/partials/menu-bar.html',
         controllerAs: 'menu',
-        controller: function() {
-          this.items = [
-            {name:'Inicio'},
-            {name:'Productos', subitems: [
-              {name:'Almacenamiento de Líquidos'},
-              {name:'Tratamiento de Aguas'},
-              {name:'Revestimientos'},
-              {name:'Línea Náutica'},
-              {name:'Trabajos Especiales'}
-            ]},
-            {name:'Servicios'},
-            {name:'Galería'},
-            {name:'Enlaces'},
-            {name:'Contacto'}
-          ];
+        controller: function(mainRoutes, $location) {
+          this.items = mainRoutes;
 
           this.shouldShowSubitems = function(item) {
             return item.subitems && item.subitems.length > 0;
+          };
+
+          this.isActive = function (viewLocation) {
+            return viewLocation === $location.path();
           };
         }
       };
@@ -144,6 +135,21 @@
             }
           });
         }
+      };
+    })
+    .directive('content', function ($compile) {
+      var linker = function(scope, element, attrs) {
+        element.html(attrs.template).show();
+        $compile(element.contents())(scope);
+      };
+
+      return {
+          restrict: 'E',
+          replace: true,
+          link: linker,
+          scope: {
+              content:'='
+          }
       };
     });
 })();

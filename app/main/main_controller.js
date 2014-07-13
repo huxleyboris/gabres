@@ -2,12 +2,6 @@
   'use strict';
 
   angular.module('gabres-main', ['ngRoute', 'ui.bootstrap'])
-    .config(function($routeProvider) {
-      $routeProvider
-        .when('/', {
-          templateUrl: 'main/main.html'
-      });
-    })
     .controller('ContactController', function($modal) {
       this.openDialog = function() {
         $modal.open({
@@ -42,9 +36,13 @@
         return copy;
       };
 
+      this.hasProducts = function(line) {
+        return line.products && line.products.length > 0;
+      };
+
       this.lines = [
         {
-          id: 'alma-liq',
+          id: 'almacenamiento-liquidos',
           name: 'Almacenamiento de Líquidos',
           description: 'Disponemos de diversos modelos de depósitos abarcando todas las necesidades del instalador:\nCilíndricos, rectangulares, especiales bajo rampa, horizontales con pies de soporte, para enterrar, etc.\nTrabajamos a medida, es decir, con cualquier diámetro y altura según disponibilidad de espacio.\nUtilizando el tipo de resina adecuado para cada caso fabricamos depósitos para contención de agua potable, sistemas contraincendios, combustibles, químicos, abonos y productos alimenticios en general.\nRealizamos montaje de depósitos en el lugar final donde irán instalados con nuestros equipos de profesionales. (ver en Servicios -> Montaje en obra).',
           images: [
@@ -170,12 +168,30 @@
           description: 'Sistemas de depuración para aguas residuales de uso doméstico con el objetivo de conseguir una calidad de vertido dentro de los parámentros establecidos por la normativa europea.',
           images: [
             { url: 'http://prgabres.com/pruebaa004001.jpg' }
+          ],
+          products: [
+            {
+              name: 'DDBA - Fosa séptica Decantador - Digestor'
+            },
+            {
+              name: 'DDBB - Fosa séptica Decantador - Digestor con filtros biológicos'
+            },
+            {
+              name: 'OX - Depuradora de oxidación total'
+            },
+            {
+              name: 'SGD - Separador de grasas'
+            },
+            {
+              name: 'SGE - Desarenador'
+            },
           ]
         },
         {
           id: 'revestimientos-impermeabilizacion',
           name: 'Revestimientos / Impermeabilización',
-          description: 'Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha,  cubiertas, naves industriales, etc.\nCaracterísticas:\n- Rapidez en la ejecución.\n- Mínimo mantenimiento.\n- Fácil de limpiar.\n- Distintos colores.',
+          // description: 'Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha,  cubiertas, naves industriales, etc.\nCaracterísticas:\n- Rapidez en la ejecución.\n- Mínimo mantenimiento.\n- Fácil de limpiar.\n- Distintos colores.',
+          content: '<p class="text-justify">Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha, cubiertas, naves industriales, etc.</p><p class="text-left">Características:<ul class="text-left"><li>Rapidez en la ejecución</li><li>Mínimo mantenimiento</li><li>Fácil de limpiar</li><li>Distintos colores</li></ul></p>',
           images: [
             { url: 'http://prgabres.com/pruebaa004001.jpg' }
           ]
@@ -183,7 +199,8 @@
         {
           id: 'linea-nautica',
           name: 'Línea Náutica',
-          description: 'Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.\nRealizamos también reparaciones de cascos y cubiertas.',
+          //description: 'Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.\nRealizamos también reparaciones de cascos y cubiertas.',
+          content: '<p class="text-justify">Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.</p><p class="text-justify">Realizamos también reparaciones de cascos y cubiertas.</p>',
           images: [
             { url: 'http://prgabres.com/pruebaa004001.jpg' }
           ]
@@ -193,7 +210,8 @@
       this.otherWorks = {
         id: 'trabajos-especiales',
         name: 'Trabajos Especiales',
-        description: 'Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie. Todo en poliester y fibras de vidrio. ¡Consúltenos!'
+        //description: 'Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie. Todo en poliester y fibras de vidrio. ¡Consúltenos!'
+        content: '<p class="text-justify">Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie.</p><p class="text-justify">Todo en poliester y fibras de vidrio.</p><p class="text-center"><strong>¡Consúltenos!</strong></p>'
       };
     });
 

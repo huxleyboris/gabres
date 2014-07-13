@@ -5,15 +5,15 @@
 </button>
 <div class="collapse navbar-collapse navHeaderCollapse" collapse="isCollapsed">
   <ul class="nav navbar-nav navbar-right nav-pills">
-    <li ng-repeat="item in menu.items" dropdown>
-      <a ng-show="menu.shouldShowSubitems(item)" href="#" class="dropdown-toggle">
+    <li ng-repeat="item in menu.items" ng-class="{ active: menu.isActive(item.path) }" dropdown>
+      <a ng-show="menu.shouldShowSubitems(item)" href="#{{item.path}}" class="dropdown-toggle">
           {{item.name}} <span class="caret"></span></a>
       <ul ng-show="menu.shouldShowSubitems(item)" class="dropdown-menu" >
         <li ng-repeat="subitem in item.subitems">
-          <a href="#">{{subitem.name}}</a>
+          <a href="#{{subitem.path}}">{{subitem.name}}</a>
         </li>
       </ul>
-      <a ng-hide="menu.shouldShowSubitems(item)" href="#">{{item.name}}</a>
+      <a ng-hide="menu.shouldShowSubitems(item)" href="#{{item.path}}">{{item.name}}</a>
     </li>
   </ul>
 </div>

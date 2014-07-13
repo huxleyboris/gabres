@@ -1,19 +1,22 @@
-(function(){
+(function() {
 	'use strict';
 
-	angular.module('gabres', [ 'ngRoute','gabres-main', 'gabres-directives','templates'])
-	  .config(function ($routeProvider) {
+	var initializeMainRoutes = function(routes, routeProvider) {
+		angular.forEach(routes, function(route, value) {
+			routeProvider.when(route.path, {
+				templateUrl: route.templateUrl,
+				controller: route.controller,
+				controllerAs: route.controllerAlias
+			});
+		});
+	};
+
+	angular.module('gabres', ['ngRoute', 'gabres-routes', 'gabres-main', 'gabres-directives', 'templates'])
+	  .config(function ($routeProvider, mainRoutes) {
+
+			initializeMainRoutes(mainRoutes, $routeProvider);
+
 	    $routeProvider
-				.when('/products', {
-					templateUrl: 'assets/partials/products.html',
-					controller: 'ProductLinesController',
-					controllerAs: 'lineCtrl'
-				})
-				.when('/contact', {
-					templateUrl: 'assets/partials/contact.html',
-					controller: 'ContactController',
-					controllerAs: 'contactCtrl'
-				})
 	      .otherwise({
 	        redirectTo: '/'
 	      });
