@@ -83,7 +83,9 @@ gulp.task('connect', function() {
 
 gulp.task('deploy', function() {
     gulp.src('./build/**/*')
-      .pipe(deploy({}));
+      .pipe(deploy({
+        cacheDir: '.temp'
+      }));
 });
 
 gulp.task('default',['connect','scripts','templates','fonts', 'favicon','css','copy-index','vendorJS','vendorCSS','watch']);
