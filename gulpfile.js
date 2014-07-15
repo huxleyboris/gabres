@@ -36,14 +36,22 @@ gulp.task('vendorJS', function(){
 gulp.task('vendorCSS', function(){
     //concatenate vendor CSS files
     gulp.src(['!./bower_components/**/*.min.css',
+      '!./bower_components/font-awesome/css/font-awesome.css',
       './bower_components/**/*.css'])
       .pipe(plugins.concat('lib.css'))
       .pipe(gulp.dest('./build'));
 });
 
+gulp.task('faCSS', function(){
+    //concatenate vendor CSS files
+    gulp.src('./bower_components/font-awesome/css/font-awesome.css')
+      .pipe(plugins.concat('fa.css'))
+      .pipe(gulp.dest('./build/facss'));
+});
+
 gulp.task('fonts', function(){
     gulp.src(['./bower_components/font-awesome/fonts/*', './bower_components/bootstrap/fonts/*'])
-      .pipe(gulp.dest('./build/dummy/fonts'));
+      .pipe(gulp.dest('./build/fonts'));
 });
 
 gulp.task('favicon', function(){
@@ -88,4 +96,4 @@ gulp.task('deploy', function() {
       }));
 });
 
-gulp.task('default',['connect','scripts','templates','fonts', 'favicon','css','copy-index','vendorJS','vendorCSS','watch']);
+gulp.task('default',['connect','scripts','templates','fonts', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS','vendorCSS','watch']);
