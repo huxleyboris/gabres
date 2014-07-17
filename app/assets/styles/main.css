@@ -3,6 +3,12 @@
   padding: 0 0 0 1em;
 }
 
+.auto-margin {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
 .image-gallery {
   width: 100%;
   height: 100%;

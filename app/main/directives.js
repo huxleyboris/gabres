@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('gabres-directives', ['gabres-routes'])
+  angular.module('gabres-directives', ['gabres-routes', 'gabres-company'])
     .directive('menuBar', function() {
       return {
         restrict: 'E',
@@ -23,7 +23,10 @@
     .directive('appFooter', function() {
       return {
         restrict: 'E',
-        templateUrl: 'assets/partials/app-footer.html'
+        templateUrl: 'assets/partials/app-footer.html',
+        controller: function($scope, company) {
+          $scope.company = company;
+        }
       };
     })
     .directive('product', function() {
@@ -68,7 +71,6 @@
           var spyElems = [];
 
           scope.$watch('spies', function(spies) {
-
             angular.forEach(spies, function(spy, value) {
               if (!spyElems[spy.id]) {
                 spyElems[spy.id] = findElem(elem, spy);
@@ -79,7 +81,8 @@
           angular.element($window).bind('scroll', function() {
             var highlightSpy = null;
 
-            // hack
+            // hack - if the array is empty, we'll try to reinitialize it,
+            // as the content may have been dynamic and thus not captured before
             if (scope.spies.length === 0) {
               scope.$watch('spies', function(spies) {
 
@@ -99,7 +102,7 @@
               if (spyElems[spy.id]) {
                 var pos = spyElems[spy.id].getBoundingClientRect().top;
 
-                if (pos - $window.scrollY <= 0) {
+                if (pos - $window.scrollY <= 10) {
                   spy.pos = pos;
                   highlightSpy = highlightSpy ? highlightSpy : spy;
                   if (highlightSpy.pos < spy.pos) {

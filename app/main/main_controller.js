@@ -1,8 +1,10 @@
 (function(){
   'use strict';
 
-  angular.module('gabres-main', ['ngRoute', 'ui.bootstrap'])
-    .controller('ContactController', function($modal) {
+  angular.module('gabres-main', ['ngRoute', 'ui.bootstrap', 'gabres-company'])
+    .controller('ContactController', function($modal, company, $scope) {
+      $scope.company = company;
+
       this.openDialog = function() {
         $modal.open({
           templateUrl: 'assets/partials/contact-form.html',
