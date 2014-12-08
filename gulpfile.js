@@ -37,6 +37,8 @@ gulp.task('vendorCSS', function(){
     //concatenate vendor CSS files
     gulp.src(['!./bower_components/**/*.min.css',
       '!./bower_components/font-awesome/css/font-awesome.css',
+      '!./bower_components/bootstrap/dist/css/bootstrap.css',
+      '!./bower_components/bootstrap/dist/css/bootstrap-theme.css',
       './bower_components/**/*.css'])
       .pipe(plugins.concat('lib.css'))
       .pipe(gulp.dest('./build'));
@@ -47,6 +49,19 @@ gulp.task('faCSS', function(){
     gulp.src('./bower_components/font-awesome/css/font-awesome.css')
       .pipe(plugins.concat('fa.css'))
       .pipe(gulp.dest('./build/facss'));
+});
+
+gulp.task('glyphicons', function(){
+  gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.css',
+    './bower_components/bootstrap/dist/css/bootstrap-theme.css'])
+    .pipe(plugins.concat('bootstrap.css'))
+    .pipe(gulp.dest('./build/bootstrapcss'));
+});
+
+gulp.task('glyphmaps', function(){
+  gulp.src(['./bower_components/bootstrap/dist/css/bootstrap-theme.css.map',
+    './bower_components/bootstrap/dist/css/bootstrap.css.map'])
+    .pipe(gulp.dest('./build/bootstrapcss'));
 });
 
 gulp.task('fonts', function(){
@@ -96,4 +111,4 @@ gulp.task('deploy', function() {
       }));
 });
 
-gulp.task('default',['connect','scripts','templates','fonts', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS','vendorCSS','watch']);
+gulp.task('default',['connect','scripts','templates','fonts', 'glyphicons', 'glyphmaps', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS','vendorCSS','watch']);
