@@ -29,7 +29,18 @@
 (function() {
   'use strict';
 
-  angular.module('gabres-directives', ['gabres-routes'])
+  angular.module('gabres-company', [])
+    .constant('company', {
+      emailAddress: 'info@prgabres.com',
+      phone: '965 105 963'
+    });
+
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('gabres-directives', ['gabres-routes', 'gabres-company'])
     .directive('menuBar', function() {
       return {
         restrict: 'E',
@@ -51,7 +62,10 @@
     .directive('appFooter', function() {
       return {
         restrict: 'E',
-        templateUrl: 'assets/partials/app-footer.html'
+        templateUrl: 'assets/partials/app-footer.html',
+        controller: function($scope, company) {
+          $scope.company = company;
+        }
       };
     })
     .directive('product', function() {
@@ -96,7 +110,6 @@
           var spyElems = [];
 
           scope.$watch('spies', function(spies) {
-
             angular.forEach(spies, function(spy, value) {
               if (!spyElems[spy.id]) {
                 spyElems[spy.id] = findElem(elem, spy);
@@ -107,7 +120,8 @@
           angular.element($window).bind('scroll', function() {
             var highlightSpy = null;
 
-            // hack
+            // hack - if the array is empty, we'll try to reinitialize it,
+            // as the content may have been dynamic and thus not captured before
             if (scope.spies.length === 0) {
               scope.$watch('spies', function(spies) {
 
@@ -127,7 +141,7 @@
               if (spyElems[spy.id]) {
                 var pos = spyElems[spy.id].getBoundingClientRect().top;
 
-                if (pos - $window.scrollY <= 0) {
+                if (pos <= 70) {
                   spy.pos = pos;
                   highlightSpy = highlightSpy ? highlightSpy : spy;
                   if (highlightSpy.pos < spy.pos) {
@@ -237,8 +251,10 @@
 (function(){
   'use strict';
 
-  angular.module('gabres-main', ['ngRoute', 'ui.bootstrap'])
-    .controller('ContactController', function($modal) {
+  angular.module('gabres-main', ['ngRoute', 'ui.bootstrap', 'gabres-company'])
+    .controller('ContactController', function($modal, company, $scope) {
+      $scope.company = company;
+
       this.openDialog = function() {
         $modal.open({
           templateUrl: 'assets/partials/contact-form.html',
@@ -256,7 +272,7 @@
     .controller('ProductLinesController', function($modal) {
       this.open = function(product) {
         $modal.open({
-          templateUrl: 'assets/partials/product.html',
+          templateUrl: 'assets/partials/product-item.html',
           controller: 'ProductController',
           resolve: {
             product: function() {
@@ -264,6 +280,10 @@
             }
           }
         });
+      };
+
+      this.focusOffset = function(line) {
+        console.log(this);
       };
 
       this.allLines = function() {
@@ -469,13 +489,6 @@
         templateUrl: 'assets/partials/products.html',
         controller: 'ProductLinesController',
         controllerAlias: 'lineCtrl'
-        // subitems: [
-        //     {name:'Almacenamiento de Líquidos'},
-        //     {name:'Tratamiento de Aguas'},
-        //     {name:'Revestimientos'},
-        //     {name:'Línea Náutica'},
-        //     {name:'Trabajos Especiales'}
-        //   ]},
       },
       {
         name:'Servicios',
