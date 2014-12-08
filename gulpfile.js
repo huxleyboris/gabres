@@ -111,4 +111,5 @@ gulp.task('deploy', function() {
       }));
 });
 
-gulp.task('default',['connect','scripts','templates','fonts', 'glyphicons', 'glyphmaps', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS','vendorCSS','watch']);
+gulp.task('build', ['scripts', 'templates', 'fonts', 'glyphicons', 'glyphmaps', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS', 'vendorCSS']);
+gulp.task('default', ['connect', 'build', 'watch']);
