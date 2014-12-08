@@ -22,7 +22,7 @@
     .controller('ProductLinesController', function($modal) {
       this.open = function(product) {
         $modal.open({
-          templateUrl: 'assets/partials/product.html',
+          templateUrl: 'assets/partials/product-item.html',
           controller: 'ProductController',
           resolve: {
             product: function() {
@@ -30,6 +30,10 @@
             }
           }
         });
+      };
+
+      this.focusOffset = function(line) {
+        console.log(this);
       };
 
       this.allLines = function() {

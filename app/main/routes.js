@@ -14,13 +14,6 @@
         templateUrl: 'assets/partials/products.html',
         controller: 'ProductLinesController',
         controllerAlias: 'lineCtrl'
-        // subitems: [
-        //     {name:'Almacenamiento de Líquidos'},
-        //     {name:'Tratamiento de Aguas'},
-        //     {name:'Revestimientos'},
-        //     {name:'Línea Náutica'},
-        //     {name:'Trabajos Especiales'}
-        //   ]},
       },
       {
         name:'Servicios',

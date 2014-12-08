@@ -102,7 +102,7 @@
               if (spyElems[spy.id]) {
                 var pos = spyElems[spy.id].getBoundingClientRect().top;
 
-                if (pos - $window.scrollY <= 10) {
+                if (pos <= 70) {
                   spy.pos = pos;
                   highlightSpy = highlightSpy ? highlightSpy : spy;
                   if (highlightSpy.pos < spy.pos) {

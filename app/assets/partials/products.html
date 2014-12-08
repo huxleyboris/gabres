@@ -1,7 +1,7 @@
 <div class="row" scroll-spy>
   <div class="col-md-3 list-group">
     <div id="sidebar" class="affix">
-      <a spy="{{line.id}}" class="list-group-item" ng-repeat="line in lineCtrl.allLines()" ng-click="lineCtrl.focus(line)">
+      <a spy="{{line.id}}" class="list-group-item" ng-repeat="line in lineCtrl.allLines()" >
         <h5 class="list-group-item-heading">{{line.name}}</h5>
       </a>
     </div>
