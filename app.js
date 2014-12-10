@@ -298,10 +298,6 @@
         });
       };
 
-      this.focusOffset = function(line) {
-        console.log(this);
-      };
-
       this.allLines = function() {
         var copy = this.lines.slice(0);
         copy.push(this.otherWorks);
