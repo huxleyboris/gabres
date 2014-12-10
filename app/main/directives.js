@@ -2,6 +2,12 @@
   'use strict';
 
   angular.module('gabres-directives', ['gabres-routes', 'gabres-company'])
+    .directive('companyFooter', function() {
+      return {
+        restrict: 'E',
+        templateUrl: 'assets/partials/company-footer.html'
+      };
+    })
     .directive('menuBar', function() {
       return {
         restrict: 'E',
