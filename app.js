@@ -24,7 +24,6 @@
 
 })();
 
-'app controller goes here';
 'common service goes here';
 (function() {
   'use strict';
@@ -206,7 +205,7 @@
           replace: true,
           link: linker,
           scope: {
-              content:'='
+              content: '='
           }
       };
     })
