@@ -46,6 +46,34 @@
 }
 
 /* ----------------------- */
+/* Hide */
+/* ----------------------- */
+
+@media (max-width: 768px) {
+  .big-device {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .small-device {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .big-device-brand {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .small-device-brand {
+    display: none;
+  }
+}
+
+/* ----------------------- */
 /* Map section */
 /* ----------------------- */
 
