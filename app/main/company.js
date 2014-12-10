@@ -4,6 +4,7 @@
   angular.module('gabres-company', [])
     .constant('company', {
       name: 'Gabres S.L. - Plásticos Reforzados',
+      shortName: 'Gabres S.L.',
       physicalAddress: {
         street: 'Finca La Ramona, 144 - Polígono "C"',
         city: '(03114)  BACAROT - ALICANTE'
