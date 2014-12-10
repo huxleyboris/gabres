@@ -68080,332 +68080,6 @@ module.exports = function (grunt) {
   });
 };
 
-/*!
- * Bootstrap Grunt task for Glyphicons data generation
- * http://getbootstrap.com
- * Copyright 2014 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
-'use strict';
-var fs = require('fs');
-
-module.exports = function generateGlyphiconsData(grunt) {
-  // Pass encoding, utf8, so `readFileSync` will return a string instead of a
-  // buffer
-  var glyphiconsFile = fs.readFileSync('less/glyphicons.less', 'utf8');
-  var glyphiconsLines = glyphiconsFile.split('\n');
-
-  // Use any line that starts with ".glyphicon-" and capture the class name
-  var iconClassName = /^\.(glyphicon-[^\s]+)/;
-  var glyphiconsData = '# This file is generated via Grunt task. **Do not edit directly.**\n' +
-                       '# See the \'build-glyphicons-data\' task in Gruntfile.js.\n\n';
-  var glyphiconsYml = 'docs/_data/glyphicons.yml';
-  for (var i = 0, len = glyphiconsLines.length; i < len; i++) {
-    var match = glyphiconsLines[i].match(iconClassName);
-
-    if (match !== null) {
-      glyphiconsData += '- ' + match[1] + '\n';
-    }
-  }
-
-  // Create the `_data` directory if it doesn't already exist
-  if (!fs.existsSync('docs/_data')) {
-    fs.mkdirSync('docs/_data');
-  }
-
-  try {
-    fs.writeFileSync(glyphiconsYml, glyphiconsData);
-  }
-  catch (err) {
-    grunt.fail.warn(err);
-  }
-  grunt.log.writeln('File ' + glyphiconsYml.cyan + ' created.');
-};
-
-/*!
- * Bootstrap Grunt task for parsing Less docstrings
- * http://getbootstrap.com
- * Copyright 2014 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
-'use strict';
-
-var markdown = require('markdown').markdown;
-
-function markdown2html(markdownString) {
-  // the slice removes the <p>...</p> wrapper output by Markdown processor
-  return markdown.toHTML(markdownString.trim()).slice(3, -4);
-}
-
-
-/*
-Mini-language:
-  //== This is a normal heading, which starts a section. Sections group variables together.
-  //## Optional description for the heading
-
-  //=== This is a subheading.
-
-  //** Optional description for the following variable. You **can** use Markdown in descriptions to discuss `<html>` stuff.
-  @foo: #fff;
-
-  //-- This is a heading for a section whose variables shouldn't be customizable
-
-  All other lines are ignored completely.
-*/
-
-
-var CUSTOMIZABLE_HEADING = /^[/]{2}={2}(.*)$/;
-var UNCUSTOMIZABLE_HEADING = /^[/]{2}-{2}(.*)$/;
-var SUBSECTION_HEADING = /^[/]{2}={3}(.*)$/;
-var SECTION_DOCSTRING = /^[/]{2}#{2}(.*)$/;
-var VAR_ASSIGNMENT = /^(@[a-zA-Z0-9_-]+):[ ]*([^ ;][^;]+);[ ]*$/;
-var VAR_DOCSTRING = /^[/]{2}[*]{2}(.*)$/;
-
-function Section(heading, customizable) {
-  this.heading = heading.trim();
-  this.id = this.heading.replace(/\s+/g, '-').toLowerCase();
-  this.customizable = customizable;
-  this.docstring = null;
-  this.subsections = [];
-}
-
-Section.prototype.addSubSection = function (subsection) {
-  this.subsections.push(subsection);
-};
-
-function SubSection(heading) {
-  this.heading = heading.trim();
-  this.id = this.heading.replace(/\s+/g, '-').toLowerCase();
-  this.variables = [];
-}
-
-SubSection.prototype.addVar = function (variable) {
-  this.variables.push(variable);
-};
-
-function VarDocstring(markdownString) {
-  this.html = markdown2html(markdownString);
-}
-
-function SectionDocstring(markdownString) {
-  this.html = markdown2html(markdownString);
-}
-
-function Variable(name, defaultValue) {
-  this.name = name;
-  this.defaultValue = defaultValue;
-  this.docstring = null;
-}
-
-function Tokenizer(fileContent) {
-  this._lines = fileContent.split('\n');
-  this._next = undefined;
-}
-
-Tokenizer.prototype.unshift = function (token) {
-  if (this._next !== undefined) {
-    throw new Error('Attempted to unshift twice!');
-  }
-  this._next = token;
-};
-
-Tokenizer.prototype._shift = function () {
-  // returning null signals EOF
-  // returning undefined means the line was ignored
-  if (this._next !== undefined) {
-    var result = this._next;
-    this._next = undefined;
-    return result;
-  }
-  if (this._lines.length <= 0) {
-    return null;
-  }
-  var line = this._lines.shift();
-  var match = null;
-  match = SUBSECTION_HEADING.exec(line);
-  if (match !== null) {
-    return new SubSection(match[1]);
-  }
-  match = CUSTOMIZABLE_HEADING.exec(line);
-  if (match !== null) {
-    return new Section(match[1], true);
-  }
-  match = UNCUSTOMIZABLE_HEADING.exec(line);
-  if (match !== null) {
-    return new Section(match[1], false);
-  }
-  match = SECTION_DOCSTRING.exec(line);
-  if (match !== null) {
-    return new SectionDocstring(match[1]);
-  }
-  match = VAR_DOCSTRING.exec(line);
-  if (match !== null) {
-    return new VarDocstring(match[1]);
-  }
-  var commentStart = line.lastIndexOf('//');
-  var varLine = (commentStart === -1) ? line : line.slice(0, commentStart);
-  match = VAR_ASSIGNMENT.exec(varLine);
-  if (match !== null) {
-    return new Variable(match[1], match[2]);
-  }
-  return undefined;
-};
-
-Tokenizer.prototype.shift = function () {
-  while (true) {
-    var result = this._shift();
-    if (result === undefined) {
-      continue;
-    }
-    return result;
-  }
-};
-
-function Parser(fileContent) {
-  this._tokenizer = new Tokenizer(fileContent);
-}
-
-Parser.prototype.parseFile = function () {
-  var sections = [];
-  while (true) {
-    var section = this.parseSection();
-    if (section === null) {
-      if (this._tokenizer.shift() !== null) {
-        throw new Error('Unexpected unparsed section of file remains!');
-      }
-      return sections;
-    }
-    sections.push(section);
-  }
-};
-
-Parser.prototype.parseSection = function () {
-  var section = this._tokenizer.shift();
-  if (section === null) {
-    return null;
-  }
-  if (!(section instanceof Section)) {
-    throw new Error('Expected section heading; got: ' + JSON.stringify(section));
-  }
-  var docstring = this._tokenizer.shift();
-  if (docstring instanceof SectionDocstring) {
-    section.docstring = docstring;
-  }
-  else {
-    this._tokenizer.unshift(docstring);
-  }
-  this.parseSubSections(section);
-
-  return section;
-};
-
-Parser.prototype.parseSubSections = function (section) {
-  while (true) {
-    var subsection = this.parseSubSection();
-    if (subsection === null) {
-      if (section.subsections.length === 0) {
-        // Presume an implicit initial subsection
-        subsection = new SubSection('');
-        this.parseVars(subsection);
-      }
-      else {
-        break;
-      }
-    }
-    section.addSubSection(subsection);
-  }
-
-  if (section.subsections.length === 1 && !(section.subsections[0].heading) && section.subsections[0].variables.length === 0) {
-    // Ignore lone empty implicit subsection
-    section.subsections = [];
-  }
-};
-
-Parser.prototype.parseSubSection = function () {
-  var subsection = this._tokenizer.shift();
-  if (subsection instanceof SubSection) {
-    this.parseVars(subsection);
-    return subsection;
-  }
-  this._tokenizer.unshift(subsection);
-  return null;
-};
-
-Parser.prototype.parseVars = function (subsection) {
-  while (true) {
-    var variable = this.parseVar();
-    if (variable === null) {
-      return;
-    }
-    subsection.addVar(variable);
-  }
-};
-
-Parser.prototype.parseVar = function () {
-  var docstring = this._tokenizer.shift();
-  if (!(docstring instanceof VarDocstring)) {
-    this._tokenizer.unshift(docstring);
-    docstring = null;
-  }
-  var variable = this._tokenizer.shift();
-  if (variable instanceof Variable) {
-    variable.docstring = docstring;
-    return variable;
-  }
-  this._tokenizer.unshift(variable);
-  return null;
-};
-
-
-module.exports = Parser;
-
-/*!
- * Bootstrap Grunt task for generating raw-files.min.js for the Customizer
- * http://getbootstrap.com
- * Copyright 2014 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
-
-/* global btoa: true */
-
-'use strict';
-var fs = require('fs');
-var btoa = require('btoa');
-var glob = require('glob');
-
-function getFiles(type) {
-  var files = {};
-  var recursive = (type === 'less');
-  var globExpr = (recursive ? '/**/*' : '/*');
-  glob.sync(type + globExpr)
-    .filter(function (path) {
-      return type === 'fonts' ? true : new RegExp('\\.' + type + '$').test(path);
-    })
-    .forEach(function (fullPath) {
-      var relativePath = fullPath.replace(/^[^/]+\//, '');
-      files[relativePath] = (type === 'fonts' ? btoa(fs.readFileSync(fullPath)) : fs.readFileSync(fullPath, 'utf8'));
-    });
-  return 'var __' + type + ' = ' + JSON.stringify(files) + '\n';
-}
-
-module.exports = function generateRawFilesJs(grunt, banner) {
-  if (!banner) {
-    banner = '';
-  }
-  var dirs = ['js', 'less', 'fonts'];
-  var files = banner + dirs.map(getFiles).reduce(function (combined, file) {
-    return combined + file;
-  }, '');
-  var rawFilesJs = 'docs/assets/js/raw-files.min.js';
-  try {
-    fs.writeFileSync(rawFilesJs, files);
-  }
-  catch (err) {
-    grunt.fail.warn(err);
-  }
-  grunt.log.writeln('File ' + rawFilesJs.cyan + ' created.');
-};
-
 /* ========================================================================
  * Bootstrap: affix.js v3.2.0
  * http://getbootstrap.com/javascript/#affix
@@ -70512,6 +70186,332 @@ module.exports = function generateRawFilesJs(grunt, banner) {
   })
 
 }(jQuery);
+
+/*!
+ * Bootstrap Grunt task for Glyphicons data generation
+ * http://getbootstrap.com
+ * Copyright 2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+'use strict';
+var fs = require('fs');
+
+module.exports = function generateGlyphiconsData(grunt) {
+  // Pass encoding, utf8, so `readFileSync` will return a string instead of a
+  // buffer
+  var glyphiconsFile = fs.readFileSync('less/glyphicons.less', 'utf8');
+  var glyphiconsLines = glyphiconsFile.split('\n');
+
+  // Use any line that starts with ".glyphicon-" and capture the class name
+  var iconClassName = /^\.(glyphicon-[^\s]+)/;
+  var glyphiconsData = '# This file is generated via Grunt task. **Do not edit directly.**\n' +
+                       '# See the \'build-glyphicons-data\' task in Gruntfile.js.\n\n';
+  var glyphiconsYml = 'docs/_data/glyphicons.yml';
+  for (var i = 0, len = glyphiconsLines.length; i < len; i++) {
+    var match = glyphiconsLines[i].match(iconClassName);
+
+    if (match !== null) {
+      glyphiconsData += '- ' + match[1] + '\n';
+    }
+  }
+
+  // Create the `_data` directory if it doesn't already exist
+  if (!fs.existsSync('docs/_data')) {
+    fs.mkdirSync('docs/_data');
+  }
+
+  try {
+    fs.writeFileSync(glyphiconsYml, glyphiconsData);
+  }
+  catch (err) {
+    grunt.fail.warn(err);
+  }
+  grunt.log.writeln('File ' + glyphiconsYml.cyan + ' created.');
+};
+
+/*!
+ * Bootstrap Grunt task for parsing Less docstrings
+ * http://getbootstrap.com
+ * Copyright 2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+'use strict';
+
+var markdown = require('markdown').markdown;
+
+function markdown2html(markdownString) {
+  // the slice removes the <p>...</p> wrapper output by Markdown processor
+  return markdown.toHTML(markdownString.trim()).slice(3, -4);
+}
+
+
+/*
+Mini-language:
+  //== This is a normal heading, which starts a section. Sections group variables together.
+  //## Optional description for the heading
+
+  //=== This is a subheading.
+
+  //** Optional description for the following variable. You **can** use Markdown in descriptions to discuss `<html>` stuff.
+  @foo: #fff;
+
+  //-- This is a heading for a section whose variables shouldn't be customizable
+
+  All other lines are ignored completely.
+*/
+
+
+var CUSTOMIZABLE_HEADING = /^[/]{2}={2}(.*)$/;
+var UNCUSTOMIZABLE_HEADING = /^[/]{2}-{2}(.*)$/;
+var SUBSECTION_HEADING = /^[/]{2}={3}(.*)$/;
+var SECTION_DOCSTRING = /^[/]{2}#{2}(.*)$/;
+var VAR_ASSIGNMENT = /^(@[a-zA-Z0-9_-]+):[ ]*([^ ;][^;]+);[ ]*$/;
+var VAR_DOCSTRING = /^[/]{2}[*]{2}(.*)$/;
+
+function Section(heading, customizable) {
+  this.heading = heading.trim();
+  this.id = this.heading.replace(/\s+/g, '-').toLowerCase();
+  this.customizable = customizable;
+  this.docstring = null;
+  this.subsections = [];
+}
+
+Section.prototype.addSubSection = function (subsection) {
+  this.subsections.push(subsection);
+};
+
+function SubSection(heading) {
+  this.heading = heading.trim();
+  this.id = this.heading.replace(/\s+/g, '-').toLowerCase();
+  this.variables = [];
+}
+
+SubSection.prototype.addVar = function (variable) {
+  this.variables.push(variable);
+};
+
+function VarDocstring(markdownString) {
+  this.html = markdown2html(markdownString);
+}
+
+function SectionDocstring(markdownString) {
+  this.html = markdown2html(markdownString);
+}
+
+function Variable(name, defaultValue) {
+  this.name = name;
+  this.defaultValue = defaultValue;
+  this.docstring = null;
+}
+
+function Tokenizer(fileContent) {
+  this._lines = fileContent.split('\n');
+  this._next = undefined;
+}
+
+Tokenizer.prototype.unshift = function (token) {
+  if (this._next !== undefined) {
+    throw new Error('Attempted to unshift twice!');
+  }
+  this._next = token;
+};
+
+Tokenizer.prototype._shift = function () {
+  // returning null signals EOF
+  // returning undefined means the line was ignored
+  if (this._next !== undefined) {
+    var result = this._next;
+    this._next = undefined;
+    return result;
+  }
+  if (this._lines.length <= 0) {
+    return null;
+  }
+  var line = this._lines.shift();
+  var match = null;
+  match = SUBSECTION_HEADING.exec(line);
+  if (match !== null) {
+    return new SubSection(match[1]);
+  }
+  match = CUSTOMIZABLE_HEADING.exec(line);
+  if (match !== null) {
+    return new Section(match[1], true);
+  }
+  match = UNCUSTOMIZABLE_HEADING.exec(line);
+  if (match !== null) {
+    return new Section(match[1], false);
+  }
+  match = SECTION_DOCSTRING.exec(line);
+  if (match !== null) {
+    return new SectionDocstring(match[1]);
+  }
+  match = VAR_DOCSTRING.exec(line);
+  if (match !== null) {
+    return new VarDocstring(match[1]);
+  }
+  var commentStart = line.lastIndexOf('//');
+  var varLine = (commentStart === -1) ? line : line.slice(0, commentStart);
+  match = VAR_ASSIGNMENT.exec(varLine);
+  if (match !== null) {
+    return new Variable(match[1], match[2]);
+  }
+  return undefined;
+};
+
+Tokenizer.prototype.shift = function () {
+  while (true) {
+    var result = this._shift();
+    if (result === undefined) {
+      continue;
+    }
+    return result;
+  }
+};
+
+function Parser(fileContent) {
+  this._tokenizer = new Tokenizer(fileContent);
+}
+
+Parser.prototype.parseFile = function () {
+  var sections = [];
+  while (true) {
+    var section = this.parseSection();
+    if (section === null) {
+      if (this._tokenizer.shift() !== null) {
+        throw new Error('Unexpected unparsed section of file remains!');
+      }
+      return sections;
+    }
+    sections.push(section);
+  }
+};
+
+Parser.prototype.parseSection = function () {
+  var section = this._tokenizer.shift();
+  if (section === null) {
+    return null;
+  }
+  if (!(section instanceof Section)) {
+    throw new Error('Expected section heading; got: ' + JSON.stringify(section));
+  }
+  var docstring = this._tokenizer.shift();
+  if (docstring instanceof SectionDocstring) {
+    section.docstring = docstring;
+  }
+  else {
+    this._tokenizer.unshift(docstring);
+  }
+  this.parseSubSections(section);
+
+  return section;
+};
+
+Parser.prototype.parseSubSections = function (section) {
+  while (true) {
+    var subsection = this.parseSubSection();
+    if (subsection === null) {
+      if (section.subsections.length === 0) {
+        // Presume an implicit initial subsection
+        subsection = new SubSection('');
+        this.parseVars(subsection);
+      }
+      else {
+        break;
+      }
+    }
+    section.addSubSection(subsection);
+  }
+
+  if (section.subsections.length === 1 && !(section.subsections[0].heading) && section.subsections[0].variables.length === 0) {
+    // Ignore lone empty implicit subsection
+    section.subsections = [];
+  }
+};
+
+Parser.prototype.parseSubSection = function () {
+  var subsection = this._tokenizer.shift();
+  if (subsection instanceof SubSection) {
+    this.parseVars(subsection);
+    return subsection;
+  }
+  this._tokenizer.unshift(subsection);
+  return null;
+};
+
+Parser.prototype.parseVars = function (subsection) {
+  while (true) {
+    var variable = this.parseVar();
+    if (variable === null) {
+      return;
+    }
+    subsection.addVar(variable);
+  }
+};
+
+Parser.prototype.parseVar = function () {
+  var docstring = this._tokenizer.shift();
+  if (!(docstring instanceof VarDocstring)) {
+    this._tokenizer.unshift(docstring);
+    docstring = null;
+  }
+  var variable = this._tokenizer.shift();
+  if (variable instanceof Variable) {
+    variable.docstring = docstring;
+    return variable;
+  }
+  this._tokenizer.unshift(variable);
+  return null;
+};
+
+
+module.exports = Parser;
+
+/*!
+ * Bootstrap Grunt task for generating raw-files.min.js for the Customizer
+ * http://getbootstrap.com
+ * Copyright 2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/* global btoa: true */
+
+'use strict';
+var fs = require('fs');
+var btoa = require('btoa');
+var glob = require('glob');
+
+function getFiles(type) {
+  var files = {};
+  var recursive = (type === 'less');
+  var globExpr = (recursive ? '/**/*' : '/*');
+  glob.sync(type + globExpr)
+    .filter(function (path) {
+      return type === 'fonts' ? true : new RegExp('\\.' + type + '$').test(path);
+    })
+    .forEach(function (fullPath) {
+      var relativePath = fullPath.replace(/^[^/]+\//, '');
+      files[relativePath] = (type === 'fonts' ? btoa(fs.readFileSync(fullPath)) : fs.readFileSync(fullPath, 'utf8'));
+    });
+  return 'var __' + type + ' = ' + JSON.stringify(files) + '\n';
+}
+
+module.exports = function generateRawFilesJs(grunt, banner) {
+  if (!banner) {
+    banner = '';
+  }
+  var dirs = ['js', 'less', 'fonts'];
+  var files = banner + dirs.map(getFiles).reduce(function (combined, file) {
+    return combined + file;
+  }, '');
+  var rawFilesJs = 'docs/assets/js/raw-files.min.js';
+  try {
+    fs.writeFileSync(rawFilesJs, files);
+  }
+  catch (err) {
+    grunt.fail.warn(err);
+  }
+  grunt.log.writeln('File ' + rawFilesJs.cyan + ' created.');
+};
 
 /*!
  * jQuery JavaScript Library v2.1.1
@@ -87308,6 +87308,416 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 
 define([
 	"../core",
+	"./var/nonce",
+	"./var/rquery",
+	"../ajax"
+], function( jQuery, nonce, rquery ) {
+
+var oldCallbacks = [],
+	rjsonp = /(=)\?(?=&|$)|\?\?/;
+
+// Default jsonp settings
+jQuery.ajaxSetup({
+	jsonp: "callback",
+	jsonpCallback: function() {
+		var callback = oldCallbacks.pop() || ( jQuery.expando + "_" + ( nonce++ ) );
+		this[ callback ] = true;
+		return callback;
+	}
+});
+
+// Detect, normalize options and install callbacks for jsonp requests
+jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
+
+	var callbackName, overwritten, responseContainer,
+		jsonProp = s.jsonp !== false && ( rjsonp.test( s.url ) ?
+			"url" :
+			typeof s.data === "string" && !( s.contentType || "" ).indexOf("application/x-www-form-urlencoded") && rjsonp.test( s.data ) && "data"
+		);
+
+	// Handle iff the expected data type is "jsonp" or we have a parameter to set
+	if ( jsonProp || s.dataTypes[ 0 ] === "jsonp" ) {
+
+		// Get callback name, remembering preexisting value associated with it
+		callbackName = s.jsonpCallback = jQuery.isFunction( s.jsonpCallback ) ?
+			s.jsonpCallback() :
+			s.jsonpCallback;
+
+		// Insert callback into url or form data
+		if ( jsonProp ) {
+			s[ jsonProp ] = s[ jsonProp ].replace( rjsonp, "$1" + callbackName );
+		} else if ( s.jsonp !== false ) {
+			s.url += ( rquery.test( s.url ) ? "&" : "?" ) + s.jsonp + "=" + callbackName;
+		}
+
+		// Use data converter to retrieve json after script execution
+		s.converters["script json"] = function() {
+			if ( !responseContainer ) {
+				jQuery.error( callbackName + " was not called" );
+			}
+			return responseContainer[ 0 ];
+		};
+
+		// force json dataType
+		s.dataTypes[ 0 ] = "json";
+
+		// Install callback
+		overwritten = window[ callbackName ];
+		window[ callbackName ] = function() {
+			responseContainer = arguments;
+		};
+
+		// Clean-up function (fires after converters)
+		jqXHR.always(function() {
+			// Restore preexisting value
+			window[ callbackName ] = overwritten;
+
+			// Save back as free
+			if ( s[ callbackName ] ) {
+				// make sure that re-using the options doesn't screw things around
+				s.jsonpCallback = originalSettings.jsonpCallback;
+
+				// save the callback name for future use
+				oldCallbacks.push( callbackName );
+			}
+
+			// Call if it was a function and we have a response
+			if ( responseContainer && jQuery.isFunction( overwritten ) ) {
+				overwritten( responseContainer[ 0 ] );
+			}
+
+			responseContainer = overwritten = undefined;
+		});
+
+		// Delegate to script
+		return "script";
+	}
+});
+
+});
+
+define([
+	"../core",
+	"../core/parseHTML",
+	"../ajax",
+	"../traversing",
+	"../manipulation",
+	"../selector",
+	// Optional event/alias dependency
+	"../event/alias"
+], function( jQuery ) {
+
+// Keep a copy of the old load method
+var _load = jQuery.fn.load;
+
+/**
+ * Load a url into a page
+ */
+jQuery.fn.load = function( url, params, callback ) {
+	if ( typeof url !== "string" && _load ) {
+		return _load.apply( this, arguments );
+	}
+
+	var selector, type, response,
+		self = this,
+		off = url.indexOf(" ");
+
+	if ( off >= 0 ) {
+		selector = jQuery.trim( url.slice( off ) );
+		url = url.slice( 0, off );
+	}
+
+	// If it's a function
+	if ( jQuery.isFunction( params ) ) {
+
+		// We assume that it's the callback
+		callback = params;
+		params = undefined;
+
+	// Otherwise, build a param string
+	} else if ( params && typeof params === "object" ) {
+		type = "POST";
+	}
+
+	// If we have elements to modify, make the request
+	if ( self.length > 0 ) {
+		jQuery.ajax({
+			url: url,
+
+			// if "type" variable is undefined, then "GET" method will be used
+			type: type,
+			dataType: "html",
+			data: params
+		}).done(function( responseText ) {
+
+			// Save response for use in complete callback
+			response = arguments;
+
+			self.html( selector ?
+
+				// If a selector was specified, locate the right elements in a dummy div
+				// Exclude scripts to avoid IE 'Permission Denied' errors
+				jQuery("<div>").append( jQuery.parseHTML( responseText ) ).find( selector ) :
+
+				// Otherwise use the full result
+				responseText );
+
+		}).complete( callback && function( jqXHR, status ) {
+			self.each( callback, response || [ jqXHR.responseText, status, jqXHR ] );
+		});
+	}
+
+	return this;
+};
+
+});
+
+define([
+	"../core"
+], function( jQuery ) {
+
+// Support: Android 2.3
+// Workaround failure to string-cast null input
+jQuery.parseJSON = function( data ) {
+	return JSON.parse( data + "" );
+};
+
+return jQuery.parseJSON;
+
+});
+
+define([
+	"../core"
+], function( jQuery ) {
+
+// Cross-browser xml parsing
+jQuery.parseXML = function( data ) {
+	var xml, tmp;
+	if ( !data || typeof data !== "string" ) {
+		return null;
+	}
+
+	// Support: IE9
+	try {
+		tmp = new DOMParser();
+		xml = tmp.parseFromString( data, "text/xml" );
+	} catch ( e ) {
+		xml = undefined;
+	}
+
+	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
+		jQuery.error( "Invalid XML: " + data );
+	}
+	return xml;
+};
+
+return jQuery.parseXML;
+
+});
+
+define([
+	"../core",
+	"../ajax"
+], function( jQuery ) {
+
+// Install script dataType
+jQuery.ajaxSetup({
+	accepts: {
+		script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
+	},
+	contents: {
+		script: /(?:java|ecma)script/
+	},
+	converters: {
+		"text script": function( text ) {
+			jQuery.globalEval( text );
+			return text;
+		}
+	}
+});
+
+// Handle cache's special case and crossDomain
+jQuery.ajaxPrefilter( "script", function( s ) {
+	if ( s.cache === undefined ) {
+		s.cache = false;
+	}
+	if ( s.crossDomain ) {
+		s.type = "GET";
+	}
+});
+
+// Bind script tag hack transport
+jQuery.ajaxTransport( "script", function( s ) {
+	// This transport only deals with cross domain requests
+	if ( s.crossDomain ) {
+		var script, callback;
+		return {
+			send: function( _, complete ) {
+				script = jQuery("<script>").prop({
+					async: true,
+					charset: s.scriptCharset,
+					src: s.url
+				}).on(
+					"load error",
+					callback = function( evt ) {
+						script.remove();
+						callback = null;
+						if ( evt ) {
+							complete( evt.type === "error" ? 404 : 200, evt.type );
+						}
+					}
+				);
+				document.head.appendChild( script[ 0 ] );
+			},
+			abort: function() {
+				if ( callback ) {
+					callback();
+				}
+			}
+		};
+	}
+});
+
+});
+
+define([
+	"../core",
+	"../var/support",
+	"../ajax"
+], function( jQuery, support ) {
+
+jQuery.ajaxSettings.xhr = function() {
+	try {
+		return new XMLHttpRequest();
+	} catch( e ) {}
+};
+
+var xhrId = 0,
+	xhrCallbacks = {},
+	xhrSuccessStatus = {
+		// file protocol always yields status code 0, assume 200
+		0: 200,
+		// Support: IE9
+		// #1450: sometimes IE returns 1223 when it should be 204
+		1223: 204
+	},
+	xhrSupported = jQuery.ajaxSettings.xhr();
+
+// Support: IE9
+// Open requests must be manually aborted on unload (#5280)
+if ( window.ActiveXObject ) {
+	jQuery( window ).on( "unload", function() {
+		for ( var key in xhrCallbacks ) {
+			xhrCallbacks[ key ]();
+		}
+	});
+}
+
+support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
+support.ajax = xhrSupported = !!xhrSupported;
+
+jQuery.ajaxTransport(function( options ) {
+	var callback;
+
+	// Cross domain only allowed if supported through XMLHttpRequest
+	if ( support.cors || xhrSupported && !options.crossDomain ) {
+		return {
+			send: function( headers, complete ) {
+				var i,
+					xhr = options.xhr(),
+					id = ++xhrId;
+
+				xhr.open( options.type, options.url, options.async, options.username, options.password );
+
+				// Apply custom fields if provided
+				if ( options.xhrFields ) {
+					for ( i in options.xhrFields ) {
+						xhr[ i ] = options.xhrFields[ i ];
+					}
+				}
+
+				// Override mime type if needed
+				if ( options.mimeType && xhr.overrideMimeType ) {
+					xhr.overrideMimeType( options.mimeType );
+				}
+
+				// X-Requested-With header
+				// For cross-domain requests, seeing as conditions for a preflight are
+				// akin to a jigsaw puzzle, we simply never set it to be sure.
+				// (it can always be set on a per-request basis or even using ajaxSetup)
+				// For same-domain requests, won't change header if already provided.
+				if ( !options.crossDomain && !headers["X-Requested-With"] ) {
+					headers["X-Requested-With"] = "XMLHttpRequest";
+				}
+
+				// Set headers
+				for ( i in headers ) {
+					xhr.setRequestHeader( i, headers[ i ] );
+				}
+
+				// Callback
+				callback = function( type ) {
+					return function() {
+						if ( callback ) {
+							delete xhrCallbacks[ id ];
+							callback = xhr.onload = xhr.onerror = null;
+
+							if ( type === "abort" ) {
+								xhr.abort();
+							} else if ( type === "error" ) {
+								complete(
+									// file: protocol always yields status 0; see #8605, #14207
+									xhr.status,
+									xhr.statusText
+								);
+							} else {
+								complete(
+									xhrSuccessStatus[ xhr.status ] || xhr.status,
+									xhr.statusText,
+									// Support: IE9
+									// Accessing binary-data responseText throws an exception
+									// (#11426)
+									typeof xhr.responseText === "string" ? {
+										text: xhr.responseText
+									} : undefined,
+									xhr.getAllResponseHeaders()
+								);
+							}
+						}
+					};
+				};
+
+				// Listen to events
+				xhr.onload = callback();
+				xhr.onerror = callback("error");
+
+				// Create the abort callback
+				callback = xhrCallbacks[ id ] = callback("abort");
+
+				try {
+					// Do send the request (this may raise an exception)
+					xhr.send( options.hasContent && options.data || null );
+				} catch ( e ) {
+					// #14683: Only rethrow if this hasn't been notified as an error yet
+					if ( callback ) {
+						throw e;
+					}
+				}
+			},
+
+			abort: function() {
+				if ( callback ) {
+					callback();
+				}
+			}
+		};
+	}
+});
+
+});
+
+define([
+	"../core",
 	"../var/rnotwhite",
 	"../var/strundefined",
 	"../core/access",
@@ -87900,416 +88310,6 @@ jQuery.each([ "radio", "checkbox" ], function() {
 			// Support: Webkit
 			// "" is returned instead of "on" if a value isn't specified
 			return elem.getAttribute("value") === null ? "on" : elem.value;
-		};
-	}
-});
-
-});
-
-define([
-	"../core",
-	"./var/nonce",
-	"./var/rquery",
-	"../ajax"
-], function( jQuery, nonce, rquery ) {
-
-var oldCallbacks = [],
-	rjsonp = /(=)\?(?=&|$)|\?\?/;
-
-// Default jsonp settings
-jQuery.ajaxSetup({
-	jsonp: "callback",
-	jsonpCallback: function() {
-		var callback = oldCallbacks.pop() || ( jQuery.expando + "_" + ( nonce++ ) );
-		this[ callback ] = true;
-		return callback;
-	}
-});
-
-// Detect, normalize options and install callbacks for jsonp requests
-jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
-
-	var callbackName, overwritten, responseContainer,
-		jsonProp = s.jsonp !== false && ( rjsonp.test( s.url ) ?
-			"url" :
-			typeof s.data === "string" && !( s.contentType || "" ).indexOf("application/x-www-form-urlencoded") && rjsonp.test( s.data ) && "data"
-		);
-
-	// Handle iff the expected data type is "jsonp" or we have a parameter to set
-	if ( jsonProp || s.dataTypes[ 0 ] === "jsonp" ) {
-
-		// Get callback name, remembering preexisting value associated with it
-		callbackName = s.jsonpCallback = jQuery.isFunction( s.jsonpCallback ) ?
-			s.jsonpCallback() :
-			s.jsonpCallback;
-
-		// Insert callback into url or form data
-		if ( jsonProp ) {
-			s[ jsonProp ] = s[ jsonProp ].replace( rjsonp, "$1" + callbackName );
-		} else if ( s.jsonp !== false ) {
-			s.url += ( rquery.test( s.url ) ? "&" : "?" ) + s.jsonp + "=" + callbackName;
-		}
-
-		// Use data converter to retrieve json after script execution
-		s.converters["script json"] = function() {
-			if ( !responseContainer ) {
-				jQuery.error( callbackName + " was not called" );
-			}
-			return responseContainer[ 0 ];
-		};
-
-		// force json dataType
-		s.dataTypes[ 0 ] = "json";
-
-		// Install callback
-		overwritten = window[ callbackName ];
-		window[ callbackName ] = function() {
-			responseContainer = arguments;
-		};
-
-		// Clean-up function (fires after converters)
-		jqXHR.always(function() {
-			// Restore preexisting value
-			window[ callbackName ] = overwritten;
-
-			// Save back as free
-			if ( s[ callbackName ] ) {
-				// make sure that re-using the options doesn't screw things around
-				s.jsonpCallback = originalSettings.jsonpCallback;
-
-				// save the callback name for future use
-				oldCallbacks.push( callbackName );
-			}
-
-			// Call if it was a function and we have a response
-			if ( responseContainer && jQuery.isFunction( overwritten ) ) {
-				overwritten( responseContainer[ 0 ] );
-			}
-
-			responseContainer = overwritten = undefined;
-		});
-
-		// Delegate to script
-		return "script";
-	}
-});
-
-});
-
-define([
-	"../core",
-	"../core/parseHTML",
-	"../ajax",
-	"../traversing",
-	"../manipulation",
-	"../selector",
-	// Optional event/alias dependency
-	"../event/alias"
-], function( jQuery ) {
-
-// Keep a copy of the old load method
-var _load = jQuery.fn.load;
-
-/**
- * Load a url into a page
- */
-jQuery.fn.load = function( url, params, callback ) {
-	if ( typeof url !== "string" && _load ) {
-		return _load.apply( this, arguments );
-	}
-
-	var selector, type, response,
-		self = this,
-		off = url.indexOf(" ");
-
-	if ( off >= 0 ) {
-		selector = jQuery.trim( url.slice( off ) );
-		url = url.slice( 0, off );
-	}
-
-	// If it's a function
-	if ( jQuery.isFunction( params ) ) {
-
-		// We assume that it's the callback
-		callback = params;
-		params = undefined;
-
-	// Otherwise, build a param string
-	} else if ( params && typeof params === "object" ) {
-		type = "POST";
-	}
-
-	// If we have elements to modify, make the request
-	if ( self.length > 0 ) {
-		jQuery.ajax({
-			url: url,
-
-			// if "type" variable is undefined, then "GET" method will be used
-			type: type,
-			dataType: "html",
-			data: params
-		}).done(function( responseText ) {
-
-			// Save response for use in complete callback
-			response = arguments;
-
-			self.html( selector ?
-
-				// If a selector was specified, locate the right elements in a dummy div
-				// Exclude scripts to avoid IE 'Permission Denied' errors
-				jQuery("<div>").append( jQuery.parseHTML( responseText ) ).find( selector ) :
-
-				// Otherwise use the full result
-				responseText );
-
-		}).complete( callback && function( jqXHR, status ) {
-			self.each( callback, response || [ jqXHR.responseText, status, jqXHR ] );
-		});
-	}
-
-	return this;
-};
-
-});
-
-define([
-	"../core"
-], function( jQuery ) {
-
-// Support: Android 2.3
-// Workaround failure to string-cast null input
-jQuery.parseJSON = function( data ) {
-	return JSON.parse( data + "" );
-};
-
-return jQuery.parseJSON;
-
-});
-
-define([
-	"../core"
-], function( jQuery ) {
-
-// Cross-browser xml parsing
-jQuery.parseXML = function( data ) {
-	var xml, tmp;
-	if ( !data || typeof data !== "string" ) {
-		return null;
-	}
-
-	// Support: IE9
-	try {
-		tmp = new DOMParser();
-		xml = tmp.parseFromString( data, "text/xml" );
-	} catch ( e ) {
-		xml = undefined;
-	}
-
-	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-		jQuery.error( "Invalid XML: " + data );
-	}
-	return xml;
-};
-
-return jQuery.parseXML;
-
-});
-
-define([
-	"../core",
-	"../ajax"
-], function( jQuery ) {
-
-// Install script dataType
-jQuery.ajaxSetup({
-	accepts: {
-		script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
-	},
-	contents: {
-		script: /(?:java|ecma)script/
-	},
-	converters: {
-		"text script": function( text ) {
-			jQuery.globalEval( text );
-			return text;
-		}
-	}
-});
-
-// Handle cache's special case and crossDomain
-jQuery.ajaxPrefilter( "script", function( s ) {
-	if ( s.cache === undefined ) {
-		s.cache = false;
-	}
-	if ( s.crossDomain ) {
-		s.type = "GET";
-	}
-});
-
-// Bind script tag hack transport
-jQuery.ajaxTransport( "script", function( s ) {
-	// This transport only deals with cross domain requests
-	if ( s.crossDomain ) {
-		var script, callback;
-		return {
-			send: function( _, complete ) {
-				script = jQuery("<script>").prop({
-					async: true,
-					charset: s.scriptCharset,
-					src: s.url
-				}).on(
-					"load error",
-					callback = function( evt ) {
-						script.remove();
-						callback = null;
-						if ( evt ) {
-							complete( evt.type === "error" ? 404 : 200, evt.type );
-						}
-					}
-				);
-				document.head.appendChild( script[ 0 ] );
-			},
-			abort: function() {
-				if ( callback ) {
-					callback();
-				}
-			}
-		};
-	}
-});
-
-});
-
-define([
-	"../core",
-	"../var/support",
-	"../ajax"
-], function( jQuery, support ) {
-
-jQuery.ajaxSettings.xhr = function() {
-	try {
-		return new XMLHttpRequest();
-	} catch( e ) {}
-};
-
-var xhrId = 0,
-	xhrCallbacks = {},
-	xhrSuccessStatus = {
-		// file protocol always yields status code 0, assume 200
-		0: 200,
-		// Support: IE9
-		// #1450: sometimes IE returns 1223 when it should be 204
-		1223: 204
-	},
-	xhrSupported = jQuery.ajaxSettings.xhr();
-
-// Support: IE9
-// Open requests must be manually aborted on unload (#5280)
-if ( window.ActiveXObject ) {
-	jQuery( window ).on( "unload", function() {
-		for ( var key in xhrCallbacks ) {
-			xhrCallbacks[ key ]();
-		}
-	});
-}
-
-support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
-support.ajax = xhrSupported = !!xhrSupported;
-
-jQuery.ajaxTransport(function( options ) {
-	var callback;
-
-	// Cross domain only allowed if supported through XMLHttpRequest
-	if ( support.cors || xhrSupported && !options.crossDomain ) {
-		return {
-			send: function( headers, complete ) {
-				var i,
-					xhr = options.xhr(),
-					id = ++xhrId;
-
-				xhr.open( options.type, options.url, options.async, options.username, options.password );
-
-				// Apply custom fields if provided
-				if ( options.xhrFields ) {
-					for ( i in options.xhrFields ) {
-						xhr[ i ] = options.xhrFields[ i ];
-					}
-				}
-
-				// Override mime type if needed
-				if ( options.mimeType && xhr.overrideMimeType ) {
-					xhr.overrideMimeType( options.mimeType );
-				}
-
-				// X-Requested-With header
-				// For cross-domain requests, seeing as conditions for a preflight are
-				// akin to a jigsaw puzzle, we simply never set it to be sure.
-				// (it can always be set on a per-request basis or even using ajaxSetup)
-				// For same-domain requests, won't change header if already provided.
-				if ( !options.crossDomain && !headers["X-Requested-With"] ) {
-					headers["X-Requested-With"] = "XMLHttpRequest";
-				}
-
-				// Set headers
-				for ( i in headers ) {
-					xhr.setRequestHeader( i, headers[ i ] );
-				}
-
-				// Callback
-				callback = function( type ) {
-					return function() {
-						if ( callback ) {
-							delete xhrCallbacks[ id ];
-							callback = xhr.onload = xhr.onerror = null;
-
-							if ( type === "abort" ) {
-								xhr.abort();
-							} else if ( type === "error" ) {
-								complete(
-									// file: protocol always yields status 0; see #8605, #14207
-									xhr.status,
-									xhr.statusText
-								);
-							} else {
-								complete(
-									xhrSuccessStatus[ xhr.status ] || xhr.status,
-									xhr.statusText,
-									// Support: IE9
-									// Accessing binary-data responseText throws an exception
-									// (#11426)
-									typeof xhr.responseText === "string" ? {
-										text: xhr.responseText
-									} : undefined,
-									xhr.getAllResponseHeaders()
-								);
-							}
-						}
-					};
-				};
-
-				// Listen to events
-				xhr.onload = callback();
-				xhr.onerror = callback("error");
-
-				// Create the abort callback
-				callback = xhrCallbacks[ id ] = callback("abort");
-
-				try {
-					// Do send the request (this may raise an exception)
-					xhr.send( options.hasContent && options.data || null );
-				} catch ( e ) {
-					// #14683: Only rethrow if this hasn't been notified as an error yet
-					if ( callback ) {
-						throw e;
-					}
-				}
-			},
-
-			abort: function() {
-				if ( callback ) {
-					callback();
-				}
-			}
 		};
 	}
 });
