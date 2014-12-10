@@ -24,7 +24,6 @@
 
 })();
 
-'common service goes here';
 (function() {
   'use strict';
 
@@ -525,3 +524,5 @@
     ]);
 
 })();
+
+'common service goes here';
