@@ -7,13 +7,13 @@
       <div class="panel-body">
         <h5><i class="fa fa-map-marker"></i> Fábrica</h5>
         <div class="container">
-          <p>Finca La Ramona, 144 - Polígono "C"</p>
-          <p>(03114)  BACAROT - ALICANTE</p>
+          <p>{{company.physicalAddress.street}}</p>
+          <p>{{company.physicalAddress.city}}</p>
         </div>
         <h5><i class="fa fa-inbox"></i> Dirección Postal</h5>
         <div class="container">
-          <p>Apartado de Correo 5254</p>
-          <p>(03080)  ALICANTE</p>
+          <p>{{company.postalAddress.street}}</p>
+          <p>{{company.postalAddress.city}}</p>
         </div>
         <p><i class="fa fa-phone"></i> {{company.phone}}</p>
         <p><a href="mailto:{{company.emailAddress}}"><i class="fa fa-envelope"></i> {{company.emailAddress}}</a></p>
