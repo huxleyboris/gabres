@@ -157,7 +157,7 @@
           replace: true,
           link: linker,
           scope: {
-              content:'='
+              content: '='
           }
       };
     })
