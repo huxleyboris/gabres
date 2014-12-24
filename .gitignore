@@ -6,3 +6,4 @@ bower_components
 **/.*.un~
 build
 .temp
+.DS_Store

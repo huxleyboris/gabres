@@ -21,13 +21,8 @@
         templateUrl: 'assets/partials/services.html'
       },
       {
-        name:'Galería',
-        path: '/gallery'
-      },
-      {
-        name:'Enlaces',
-        path: '/links',
-        templateUrl: 'assets/partials/links.html'
+        name:'Catálogo',
+        path: 'catalog'
       },
       {
         name: 'Contacto',
