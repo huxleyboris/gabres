@@ -16,13 +16,8 @@
         controllerAlias: 'lineCtrl'
       },
       {
-        name:'Servicios',
-        path: '/services',
-        templateUrl: 'assets/partials/services.html'
-      },
-      {
         name:'Catálogo',
-        path: 'catalog'
+        path: '/catalog'
       },
       {
         name: 'Contacto',

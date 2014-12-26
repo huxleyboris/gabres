@@ -1,12 +1,11 @@
 <div class="row" scroll-spy>
   <div class="col-md-3 list-group">
-    <div id="sidebar" class="affix">
+    <div id="sidebar" class="affix product-lines">
       <a spy="{{line.id}}" class="list-group-item" ng-repeat="line in lineCtrl.allLines()" >
         <h5 class="list-group-item-heading">{{line.name}}</h5>
       </a>
-
-      <p></p>
-      <a class="btn btn-info" href="images/gabres-catalogo-productos.pdf" target="_blank">Descarga catálogo PDF</a>
+      <a class="btn btn-info btn-catalog-download" href="images/gabres-catalogo-productos.pdf"
+        target="_blank">Descarga catálogo PDF</a>
     </div>
   </div>
   <div class="col-md-9">
