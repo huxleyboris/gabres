@@ -17,7 +17,10 @@
       },
       {
         name:'Catálogo',
-        path: '/catalog'
+        path: '/catalog',
+        templateUrl: 'assets/partials/catalog.html',
+        controller: 'CatalogController',
+        controllerAlias: 'catalogCtrl'
       },
       {
         name: 'Contacto',

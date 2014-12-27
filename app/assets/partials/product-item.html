@@ -12,13 +12,13 @@
       </slide>
     </carousel>
   </div>
-  <h5>Características</h5>
+  <h5 ng-show="product.characteristics">Características</h5>
   <ul>
     <li ng-repeat="characteristic in product.characteristics">
       {{characteristic}}
     </li>
   </ul>
-  <h5>Accesorios incluídos</h5>
+  <h5 ng-show="product.accessories">Accesorios incluídos</h5>
   <ul>
     <li ng-repeat="accessory in product.accessories">
       {{accessory}}
