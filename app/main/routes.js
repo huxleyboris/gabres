@@ -17,10 +17,8 @@
       },
       {
         name:'Catálogo',
-        path: '/catalog',
-        templateUrl: 'assets/partials/catalog.html',
-        controller: 'CatalogController',
-        controllerAlias: 'catalogCtrl'
+        absolutePath: 'images/gabres-catalogo-productos.pdf',
+        openInNewPage: true
       },
       {
         name: 'Contacto',

@@ -14,8 +14,16 @@
             return item.subitems && item.subitems.length > 0;
           };
 
-          this.isActive = function (viewLocation) {
+          this.isActive = function(viewLocation) {
             return viewLocation === $location.path();
+          };
+
+          this.pathFor = function(item) {
+            return item.path ? '#' + item.path : item.absolutePath;
+          };
+
+          this.targetFor = function(item) {
+            return item.openInNewPage ? '_blank' : '_parent';
           };
         }
       };
