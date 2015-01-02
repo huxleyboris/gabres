@@ -272,7 +272,7 @@
 (function() {
   'use strict';
 
-  angular.module('gabres-directives', ['gabres-routes', 'gabres-company'])
+  angular.module('gabres-directives', ['gabres-routes', 'gabres-company', 'duScroll'])
     .directive('menuBar', function() {
       return {
         restrict: 'E',
@@ -396,14 +396,15 @@
         }
       };
     })
-    .directive('spy', function($location) {
+    .directive('spy', function($document, $location, $anchorScroll) {
       return {
         restrict: 'A',
         require: '^scrollSpy',
         link: function(scope, elem, attrs, scrollSpy) {
           elem.bind('click', function() {
             scope.$apply(function() {
-              $location.hash(attrs.spy);
+              var elemSpied = angular.element(document.getElementById(attrs.spy));
+              $document.scrollToElementAnimated(elemSpied, 60);
             });
           });
 
