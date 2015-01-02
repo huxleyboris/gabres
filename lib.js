@@ -90336,6 +90336,13 @@ define(function() {
 	return (/^(?:checkbox|radio)$/i);
 });
 
+define([
+	"../../core",
+	"../../selector"
+], function( jQuery ) {
+	return jQuery.expr.match.needsContext;
+});
+
 /*!
  * Sizzle CSS Selector Engine v1.10.19
  * http://sizzlejs.com/
@@ -92380,10 +92387,3 @@ if ( typeof define === "function" && define.amd ) {
 // EXPOSE
 
 })( window );
-
-define([
-	"../../core",
-	"../../selector"
-], function( jQuery ) {
-	return jQuery.expr.match.needsContext;
-});
