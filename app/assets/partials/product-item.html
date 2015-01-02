@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title">{{product.name}}
-    <i ng-show="product.isMountable" class="text-primary fa fa-exclamation-circle" popover="¡También se montan en obra!" popover-trigger="mouseenter"></i>
+    <i ng-show="product.isMountable" class="text-info fa fa-exclamation-circle" popover="¡También se montan en obra!" popover-trigger="mouseenter"></i>
   </h4>
 </div>
 <div class="modal-body">
@@ -8,7 +8,7 @@
   <div class="image-gallery">
     <carousel interval="5000">
       <slide ng-repeat="image in product.images" active="image.active">
-        <img ng-src="{{image.url}}" style="margin:auto;">
+        <img class="img-rounded" ng-src="{{image.url}}" style="margin:auto;">
       </slide>
     </carousel>
   </div>

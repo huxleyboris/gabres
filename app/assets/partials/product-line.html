@@ -6,10 +6,10 @@
     <div class="text-center" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
       <p class="text-justify">{{line.description}}</p>
       <content template="{{line.content}}"></content>
-      <div style="margin-bottom: 10px">
+      <div style="margin-bottom: 10px;">
         <carousel interval="5000">
           <slide ng-repeat="image in line.images" active="image.active">
-            <img class="img-rounded" ng-src="{{image.url}}" style="margin:auto;">
+            <img class="img-rounded" ng-src="{{image.url}}" style="min-height: 300px; max-height: 300px; margin:0 auto;">
           </slide>
         </carousel>
       </div>
