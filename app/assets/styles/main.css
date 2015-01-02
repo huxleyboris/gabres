@@ -18,6 +18,10 @@ body {
   padding-bottom: 200px;
 }
 
+.list-group-item:hover {
+  cursor: pointer;
+}
+
 @media screen and (min-width: 768px) {
   .carousel-control-1 .glyphicon-chevron-left,
   .carousel-control-1 .glyphicon-chevron-right,
