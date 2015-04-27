@@ -1,12 +1,15 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')({lazy:false});
 var deploy = require('gulp-gh-pages');
+var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-minify-css');
 
 gulp.task('scripts', function(){
     //combine all js files of the app
     gulp.src(['!./app/**/*_test.js','./app/**/*.js'])
       .pipe(plugins.jshint())
       .pipe(plugins.jshint.reporter('default'))
+      .pipe(uglify({mangle: false}))
       .pipe(plugins.concat('app.js'))
       .pipe(gulp.dest('./build'));
 });
@@ -21,6 +24,7 @@ gulp.task('templates',function(){
 
 gulp.task('css', function(){
     gulp.src('./app/**/*.css')
+      .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(plugins.concat('app.css'))
       .pipe(gulp.dest('./build'));
 });
@@ -35,6 +39,7 @@ gulp.task('vendorJS', function(){
       '!./bower_components/bootstrap/js/**.js',
       '!./bower_components/jquery/src/**/**.js',
       './bower_components/**/*.js'])
+      .pipe(uglify({mangle: false}))
       .pipe(plugins.concat('lib.js'))
       .pipe(gulp.dest('./build'));
 });
@@ -47,6 +52,7 @@ gulp.task('vendorCSS', function(){
       '!./bower_components/bootstrap/dist/css/bootstrap-theme.css',
       './bower_components/**/*.css'])
       .pipe(plugins.concat('lib.css'))
+      .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest('./build'));
 });
 
