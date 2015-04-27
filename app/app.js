@@ -12,9 +12,11 @@
 	};
 
 	angular.module('gabres', ['ngRoute', 'gabres-routes', 'gabres-main', 'gabres-directives', 'templates'])
-	  .config(function ($routeProvider, mainRoutes) {
+	  .config(function ($routeProvider, $locationProvider, mainRoutes) {
 
-			initializeMainRoutes(mainRoutes, $routeProvider);
+           $locationProvider.hashPrefix('!');
+
+	   initializeMainRoutes(mainRoutes, $routeProvider);
 
 	    $routeProvider
 	      .otherwise({

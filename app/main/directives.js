@@ -19,7 +19,7 @@
           };
 
           this.pathFor = function(item) {
-            return item.path ? '#' + item.path : item.absolutePath;
+            return item.path ? '#!' + item.path : item.absolutePath;
           };
 
           this.targetFor = function(item) {
