@@ -2,9 +2,6 @@
   'use strict';
 
   angular.module('gabres-main', ['ngRoute', 'ui.bootstrap', 'gabres-company'])
-    .controller('CatalogController', function($location) {
-      //$location.absUrl('http://localhost:9000/images/gabres-catalogo-productos.pdf');
-    })
     .controller('ContactController', function($modal, company, $scope) {
       $scope.company = company;
 
