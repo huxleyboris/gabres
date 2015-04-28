@@ -1,0 +1,9 @@
+{
+	"host": "http://localhost:9000",
+	"prefix": "#!",
+	"routes": [
+		"",
+		"products",
+		"contact"
+	]
+}

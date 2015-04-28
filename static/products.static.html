@@ -1,0 +1,651 @@
+<!DOCTYPE html><html><head><style type="text/css">@charset "UTF-8";
+/* CSS Document */
+
+/** Structure */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  font-size: 14px;
+}
+
+#system-error {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+#json, #xml {
+  display: none;
+}
+
+#header {
+  position: fixed;
+  width: 100%;
+}
+
+#specs {
+  padding-top: 50px;
+}
+
+#header .angular {
+  font-family: Courier New, monospace;
+  font-weight: bold;
+}
+
+#header h1 {
+  font-weight: normal;
+  float: left;
+  font-size: 30px;
+  line-height: 30px;
+  margin: 0;
+  padding: 10px 10px;
+  height: 30px;
+}
+
+#application h2,
+#specs h2 {
+  margin: 0;
+  padding: 0.5em;
+  font-size: 1.1em;
+}
+
+#status-legend {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+#header,
+#application,
+.test-info,
+.test-actions li {
+  overflow: hidden;
+}
+
+#application {
+  margin: 10px;
+}
+
+#application iframe {
+  width: 100%;
+  height: 758px;
+}
+
+#application .popout {
+  float: right;
+}
+
+#application iframe {
+  border: none;
+}
+
+.tests li,
+.test-actions li,
+.test-it li,
+.test-it ol,
+.status-display {
+  list-style-type: none;
+}
+
+.tests,
+.test-it ol,
+.status-display {
+  margin: 0;
+  padding: 0;
+}
+
+.test-info {
+  margin-left: 1em;
+  margin-top: 0.5em;
+  border-radius: 8px 0 0 8px;
+  -webkit-border-radius: 8px 0 0 8px;
+  -moz-border-radius: 8px 0 0 8px;
+  cursor: pointer;
+}
+
+.test-info:hover .test-name {
+  text-decoration: underline;
+}
+
+.test-info .closed:before {
+  content: '\25b8\00A0';
+}
+
+.test-info .open:before {
+  content: '\25be\00A0';
+  font-weight: bold;
+}
+
+.test-it ol {
+  margin-left: 2.5em;
+}
+
+.status-display,
+.status-display li {
+  float: right;
+}
+
+.status-display li {
+  padding: 5px 10px;
+}
+
+.timer-result,
+.test-title {
+  display: inline-block;
+  margin: 0;
+  padding: 4px;
+}
+
+.test-actions .test-title,
+.test-actions .test-result {
+  display: table-cell;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.test-actions {
+  display: table;
+}
+
+.test-actions li {
+  display: table-row;
+}
+
+.timer-result {
+  width: 4em;
+  padding: 0 10px;
+  text-align: right;
+  font-family: monospace;
+}
+
+.test-it pre,
+.test-actions pre {
+  clear: left;
+  color: black;
+  margin-left: 6em;
+}
+
+.test-describe {
+  padding-bottom: 0.5em;
+}
+
+.test-describe .test-describe {
+  margin: 5px 5px 10px 2em;
+}
+
+.test-actions .status-pending .test-title:before {
+  content: '\00bb\00A0';
+}
+
+.scrollpane {
+   max-height: 20em;
+   overflow: auto;
+}
+
+/** Colors */
+
+#header {
+  background-color: #F2C200;
+}
+
+#specs h2 {
+  border-top: 2px solid #BABAD1;
+}
+
+#specs h2,
+#application h2 {
+  background-color: #efefef;
+}
+
+#application {
+  border: 1px solid #BABAD1;
+}
+
+.test-describe .test-describe {
+  border-left: 1px solid #BABAD1;
+  border-right: 1px solid #BABAD1;
+  border-bottom: 1px solid #BABAD1;
+}
+
+.status-display {
+  border: 1px solid #777;
+}
+
+.status-display .status-pending,
+.status-pending .test-info {
+  background-color: #F9EEBC;
+}
+
+.status-display .status-success,
+.status-success .test-info {
+  background-color: #B1D7A1;
+}
+
+.status-display .status-failure,
+.status-failure .test-info {
+  background-color: #FF8286;
+}
+
+.status-display .status-error,
+.status-error .test-info {
+  background-color: black;
+  color: white;
+}
+
+.test-actions .status-success .test-title {
+  color: #30B30A;
+}
+
+.test-actions .status-failure .test-title {
+  color: #DF0000;
+}
+
+.test-actions .status-error .test-title {
+  color: black;
+}
+
+.test-actions .timer-result {
+  color: #888;
+}
+</style><style type="text/css">@charset "UTF-8";
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak],
+.ng-cloak, .x-ng-cloak,
+.ng-hide {
+  display: none !important;
+}
+
+ng\:form {
+  display: block;
+}
+
+.ng-animate-block-transitions {
+  transition:0s all!important;
+  -webkit-transition:0s all!important;
+}
+
+/* show the element during a show/hide animation when the
+ * animation is ongoing, but the .ng-hide class is active */
+.ng-hide-add-active, .ng-hide-remove {
+  display: block!important;
+}
+</style><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="favicon.ico">
+
+    <!-- CSS -->
+    <link href="lib.css" rel="stylesheet">
+    <link href="facss/fa.css" rel="stylesheet">
+    <link href="bootstrapcss/bootstrap.css" rel="stylesheet">
+    <link href="app.css" rel="stylesheet">
+
+    <title>Gabres S.L. - Plásticos Reforzados</title>
+  </head>
+  <body ng-app="gabres" class="ng-scope" style="">
+    <header-bar><div class="nav navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <a href="#!/">
+      <img class="navbar-logo" style="vertical-align: middle;" src="images/logo-g.png" height="30px" width="36px">
+    </a>
+    <a href="#!/" class="navbar-brand big-device-brand ng-binding">Gabres S.L. - Plásticos Reforzados</a>
+    <menu-bar><button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+</button>
+<div class="collapse navbar-collapse navHeaderCollapse" collapse="isCollapsed" style="height: 0px;">
+  <ul class="nav navbar-nav navbar-right nav-pills">
+    <!-- ngRepeat: item in menu.items --><li ng-repeat="item in menu.items" ng-class="{ active: menu.isActive(item.path) }" dropdown="" class="ng-scope">
+      <a ng-show="menu.shouldShowSubitems(item)" href="#!/" target="_parent" class="dropdown-toggle ng-binding ng-hide" aria-haspopup="true" aria-expanded="false">
+          Inicio <span class="caret"></span></a>
+      <ul ng-show="menu.shouldShowSubitems(item)" class="dropdown-menu ng-hide">
+        <!-- ngRepeat: subitem in item.subitems -->
+      </ul>
+      <a ng-hide="menu.shouldShowSubitems(item)" href="#!/" target="_parent" class="ng-binding">Inicio</a>
+    </li><!-- end ngRepeat: item in menu.items --><li ng-repeat="item in menu.items" ng-class="{ active: menu.isActive(item.path) }" dropdown="" class="ng-scope active">
+      <a ng-show="menu.shouldShowSubitems(item)" href="#!/products" target="_parent" class="dropdown-toggle ng-binding ng-hide" aria-haspopup="true" aria-expanded="false">
+          Productos <span class="caret"></span></a>
+      <ul ng-show="menu.shouldShowSubitems(item)" class="dropdown-menu ng-hide">
+        <!-- ngRepeat: subitem in item.subitems -->
+      </ul>
+      <a ng-hide="menu.shouldShowSubitems(item)" href="#!/products" target="_parent" class="ng-binding">Productos</a>
+    </li><!-- end ngRepeat: item in menu.items --><li ng-repeat="item in menu.items" ng-class="{ active: menu.isActive(item.path) }" dropdown="" class="ng-scope">
+      <a ng-show="menu.shouldShowSubitems(item)" href="images/gabres-catalogo-productos.pdf" target="_blank" class="dropdown-toggle ng-binding ng-hide" aria-haspopup="true" aria-expanded="false">
+          Catálogo <span class="caret"></span></a>
+      <ul ng-show="menu.shouldShowSubitems(item)" class="dropdown-menu ng-hide">
+        <!-- ngRepeat: subitem in item.subitems -->
+      </ul>
+      <a ng-hide="menu.shouldShowSubitems(item)" href="images/gabres-catalogo-productos.pdf" target="_blank" class="ng-binding">Catálogo</a>
+    </li><!-- end ngRepeat: item in menu.items --><li ng-repeat="item in menu.items" ng-class="{ active: menu.isActive(item.path) }" dropdown="" class="ng-scope">
+      <a ng-show="menu.shouldShowSubitems(item)" href="#!/contact" target="_parent" class="dropdown-toggle ng-binding ng-hide" aria-haspopup="true" aria-expanded="false">
+          Contacto <span class="caret"></span></a>
+      <ul ng-show="menu.shouldShowSubitems(item)" class="dropdown-menu ng-hide">
+        <!-- ngRepeat: subitem in item.subitems -->
+      </ul>
+      <a ng-hide="menu.shouldShowSubitems(item)" href="#!/contact" target="_parent" class="ng-binding">Contacto</a>
+    </li><!-- end ngRepeat: item in menu.items -->
+  </ul>
+</div>
+</menu-bar>
+  </div>
+</div>
+</header-bar>
+    <!-- ngView:  --><div class="container main-part ng-scope" ng-view=""><div class="row ng-scope" scroll-spy="">
+  <div class="col-md-3 list-group">
+    <div id="sidebar" class="affix product-lines">
+      <!-- ngRepeat: line in lineCtrl.allLines() --><a spy="almacenamiento-liquidos" class="list-group-item ng-scope" ng-repeat="line in lineCtrl.allLines()">
+        <h5 class="list-group-item-heading ng-binding">Almacenamiento de Líquidos</h5>
+      </a><!-- end ngRepeat: line in lineCtrl.allLines() --><a spy="tratamiento-aguas" class="list-group-item ng-scope" ng-repeat="line in lineCtrl.allLines()">
+        <h5 class="list-group-item-heading ng-binding">Tratamiento de Aguas</h5>
+      </a><!-- end ngRepeat: line in lineCtrl.allLines() --><a spy="revestimientos-impermeabilizacion" class="list-group-item ng-scope" ng-repeat="line in lineCtrl.allLines()">
+        <h5 class="list-group-item-heading ng-binding">Revestimientos / Impermeabilización</h5>
+      </a><!-- end ngRepeat: line in lineCtrl.allLines() --><a spy="linea-nautica" class="list-group-item ng-scope" ng-repeat="line in lineCtrl.allLines()">
+        <h5 class="list-group-item-heading ng-binding">Línea Náutica</h5>
+      </a><!-- end ngRepeat: line in lineCtrl.allLines() --><a spy="trabajos-especiales" class="list-group-item ng-scope" ng-repeat="line in lineCtrl.allLines()">
+        <h5 class="list-group-item-heading ng-binding">Trabajos Especiales</h5>
+      </a><!-- end ngRepeat: line in lineCtrl.allLines() -->
+      <a class="btn btn-info btn-catalog-download" href="images/gabres-catalogo-productos.pdf" target="_blank">Descargar catálogo PDF</a>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <!-- ngRepeat: line in lineCtrl.allLines() --><product-line id="almacenamiento-liquidos" ng-repeat="line in lineCtrl.allLines()" class="ng-scope"><div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title ng-binding"><i class="fa fa-dot-circle-o"></i> Almacenamiento de Líquidos</h3>
+  </div>
+  <div class="panel-body">
+    <div class="text-center col-md-8" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
+      <p class="text-justify ng-binding">Disponemos de diversos modelos de depósitos abarcando todas las necesidades del instalador:
+Cilíndricos, rectangulares, especiales bajo rampa, horizontales con pies de soporte, para enterrar, etc.
+Trabajamos a medida, es decir, con cualquier diámetro y altura según disponibilidad de espacio.
+Utilizando el tipo de resina adecuado para cada caso fabricamos depósitos para contención de agua potable, sistemas contraincendios, combustibles, químicos, abonos y productos alimenticios en general.
+Realizamos montaje de depósitos en el lugar final donde irán instalados con nuestros equipos de profesionales.</p>
+      <content template="" class="ng-isolate-scope"></content>
+      <div style="margin-bottom: 10px;">
+        <div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel ng-isolate-scope" ng-swipe-right="prev()" ng-swipe-left="next()" interval="5000">
+    <ol class="carousel-indicators ng-hide" ng-show="slides.length &gt; 1">
+        <!-- ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope active"></li><!-- end ngRepeat: slide in slides track by $index -->
+    </ol>
+    <div class="carousel-inner" ng-transclude="">
+          <!-- ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope active" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/almacenamiento-liquidos.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/almacenamiento-liquidos.jpg">
+          </div><!-- end ngRepeat: image in line.images -->
+        </div>
+    <a class="left carousel-control-1 ng-hide" ng-click="prev()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control-1 ng-hide" ng-click="next()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+      </div>
+    </div>
+    <div class="text-center col-md-4" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
+      <div class="list-group">
+        <!-- ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DC - Cilíndrico vertical de superficie</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DC - Cilíndrico vertical para enterrar</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DH - Cilíndrico horizontal para enterrar</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DHS - Cilíndrico horizontal para superficie</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DR - Rectangular y otros</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">AC / AR - Arqueta acometida saneamiento</h5>
+        </a><!-- end ngRepeat: product in line.products -->
+      </div>
+    </div>
+  </div>
+</div>
+</product-line><!-- end ngRepeat: line in lineCtrl.allLines() --><product-line id="tratamiento-aguas" ng-repeat="line in lineCtrl.allLines()" class="ng-scope"><div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title ng-binding"><i class="fa fa-dot-circle-o"></i> Tratamiento de Aguas</h3>
+  </div>
+  <div class="panel-body">
+    <div class="text-center col-md-8" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
+      <p class="text-justify ng-binding">Sistemas de depuración para aguas residuales de uso doméstico con el objetivo de conseguir una calidad de vertido dentro de los parámentros establecidos por la normativa europea.</p>
+      <content template="" class="ng-isolate-scope"></content>
+      <div style="margin-bottom: 10px;">
+        <div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel ng-isolate-scope" ng-swipe-right="prev()" ng-swipe-left="next()" interval="5000">
+    <ol class="carousel-indicators" ng-show="slides.length &gt; 1">
+        <!-- ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope active"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index -->
+    </ol>
+    <div class="carousel-inner" ng-transclude="">
+          <!-- ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope active" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/tratamiento-aguas-1.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/tratamiento-aguas-1.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/tratamiento-aguas-2.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/tratamiento-aguas-2.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/tratamiento-aguas-3.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/tratamiento-aguas-3.jpg">
+          </div><!-- end ngRepeat: image in line.images -->
+        </div>
+    <a class="left carousel-control-1" ng-click="prev()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control-1" ng-click="next()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+      </div>
+    </div>
+    <div class="text-center col-md-4" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
+      <div class="list-group">
+        <!-- ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DDBA - Fosa séptica Decantador - Digestor</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">DDBB - Fosa séptica Decantador - Digestor con filtros biológicos</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">OX - Depuradora de oxidación total</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">SGD - Separador de grasas</h5>
+        </a><!-- end ngRepeat: product in line.products --><a class="list-group-item ng-scope" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+          <h5 class="list-group-item-heading ng-binding">SGE - Desarenador</h5>
+        </a><!-- end ngRepeat: product in line.products -->
+      </div>
+    </div>
+  </div>
+</div>
+</product-line><!-- end ngRepeat: line in lineCtrl.allLines() --><product-line id="revestimientos-impermeabilizacion" ng-repeat="line in lineCtrl.allLines()" class="ng-scope"><div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title ng-binding"><i class="fa fa-dot-circle-o"></i> Revestimientos / Impermeabilización</h3>
+  </div>
+  <div class="panel-body">
+    <div class="text-center" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
+      <p class="text-justify ng-binding"></p>
+      <content template="&lt;p class=&quot;text-justify&quot;&gt;Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha, cubiertas, naves industriales, etc.&lt;/p&gt;&lt;p class=&quot;text-left&quot;&gt;&lt;b&gt;Características:&lt;/b&gt;&lt;ul class=&quot;text-left&quot;&gt;&lt;li&gt;Rapidez en la ejecución&lt;/li&gt;&lt;li&gt;Mínimo mantenimiento&lt;/li&gt;&lt;li&gt;Fácil de limpiar&lt;/li&gt;&lt;li&gt;Distintos colores&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;" class="ng-isolate-scope"><p class="text-justify">Revestimiento e impermeabilización de piscinas de obra, jardineras, aljibes, fosas de ascensor, fuentes, interiores de furgonetas, cuartos de ducha, cubiertas, naves industriales, etc.</p><p class="text-left"><b>Características:</b></p><ul class="text-left"><li>Rapidez en la ejecución</li><li>Mínimo mantenimiento</li><li>Fácil de limpiar</li><li>Distintos colores</li></ul><p></p></content>
+      <div style="margin-bottom: 10px;">
+        <div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel ng-isolate-scope" ng-swipe-right="prev()" ng-swipe-left="next()" interval="5000">
+    <ol class="carousel-indicators" ng-show="slides.length &gt; 1">
+        <!-- ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope active"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index -->
+    </ol>
+    <div class="carousel-inner" ng-transclude="">
+          <!-- ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope active" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/revestimientos-impermeabilizacion-1.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/revestimientos-impermeabilizacion-1.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/revestimientos-impermeabilizacion-2.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/revestimientos-impermeabilizacion-2.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/revestimientos-impermeabilizacion-3.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/revestimientos-impermeabilizacion-3.jpg">
+          </div><!-- end ngRepeat: image in line.images -->
+        </div>
+    <a class="left carousel-control-1" ng-click="prev()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control-1" ng-click="next()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+      </div>
+    </div>
+    <div class="text-center" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
+      <div class="list-group">
+        <!-- ngRepeat: product in line.products -->
+      </div>
+    </div>
+  </div>
+</div>
+</product-line><!-- end ngRepeat: line in lineCtrl.allLines() --><product-line id="linea-nautica" ng-repeat="line in lineCtrl.allLines()" class="ng-scope"><div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title ng-binding"><i class="fa fa-dot-circle-o"></i> Línea Náutica</h3>
+  </div>
+  <div class="panel-body">
+    <div class="text-center" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
+      <p class="text-justify ng-binding"></p>
+      <content template="&lt;p class=&quot;text-justify&quot;&gt;Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.&lt;/p&gt;&lt;p class=&quot;text-justify&quot;&gt;Realizamos también reparaciones de cascos y cubiertas.&lt;/p&gt;" class="ng-isolate-scope"><p class="text-justify">Canoas, kayacs y diferentes accesorios y piezas forman parte de nuestra producción.</p><p class="text-justify">Realizamos también reparaciones de cascos y cubiertas.</p></content>
+      <div style="margin-bottom: 10px;">
+        <div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel ng-isolate-scope" ng-swipe-right="prev()" ng-swipe-left="next()" interval="5000">
+    <ol class="carousel-indicators" ng-show="slides.length &gt; 1">
+        <!-- ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope active"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index -->
+    </ol>
+    <div class="carousel-inner" ng-transclude="">
+          <!-- ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope active" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/linea-nautica-1.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/linea-nautica-1.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/linea-nautica-2.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/linea-nautica-2.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/linea-nautica-3.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/linea-nautica-3.jpg">
+          </div><!-- end ngRepeat: image in line.images -->
+        </div>
+    <a class="left carousel-control-1" ng-click="prev()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control-1" ng-click="next()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+      </div>
+    </div>
+    <div class="text-center" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
+      <div class="list-group">
+        <!-- ngRepeat: product in line.products -->
+      </div>
+    </div>
+  </div>
+</div>
+</product-line><!-- end ngRepeat: line in lineCtrl.allLines() --><product-line id="trabajos-especiales" ng-repeat="line in lineCtrl.allLines()" class="ng-scope"><div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title ng-binding"><i class="fa fa-dot-circle-o"></i> Trabajos Especiales</h3>
+  </div>
+  <div class="panel-body">
+    <div class="text-center" ng-class="{ 'col-md-8': lineCtrl.hasProducts(line) }">
+      <p class="text-justify ng-binding"></p>
+      <content template="&lt;p class=&quot;text-justify&quot;&gt;Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie.&lt;/p&gt;&lt;p class=&quot;text-justify&quot;&gt;Todo en poliester y fibras de vidrio.&lt;/p&gt;&lt;p class=&quot;text-center&quot;&gt;&lt;strong&gt;¡Consúltenos!&lt;/strong&gt;&lt;/p&gt;" class="ng-isolate-scope"><p class="text-justify">Chapas para techos, canalones, encofrados para la construcción, maceteros, cachas de motos de competición, cubas para la cria de tortugas o algas, etc. Además de pequeñas producciones en serie.</p><p class="text-justify">Todo en poliester y fibras de vidrio.</p><p class="text-center"><strong>¡Consúltenos!</strong></p></content>
+      <div style="margin-bottom: 10px;">
+        <div ng-mouseenter="pause()" ng-mouseleave="play()" class="carousel ng-isolate-scope" ng-swipe-right="prev()" ng-swipe-left="next()" interval="5000">
+    <ol class="carousel-indicators" ng-show="slides.length &gt; 1">
+        <!-- ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope active"></li><!-- end ngRepeat: slide in slides track by $index --><li ng-repeat="slide in slides track by $index" ng-class="{active: isActive(slide)}" ng-click="select(slide)" class="ng-scope"></li><!-- end ngRepeat: slide in slides track by $index -->
+    </ol>
+    <div class="carousel-inner" ng-transclude="">
+          <!-- ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope active" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/trabajos-especiales-1.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/trabajos-especiales-1.jpg">
+          </div><!-- end ngRepeat: image in line.images --><div ng-class="{
+    'active': leaving || (active &amp;&amp; !entering),
+    'prev': (next || active) &amp;&amp; direction=='prev',
+    'next': (next || active) &amp;&amp; direction=='next',
+    'right': direction=='prev',
+    'left': direction=='next'
+  }" class="item text-center ng-isolate-scope" ng-transclude="" ng-repeat="image in line.images" active="image.active">
+            <img class="img-rounded ng-scope" ng-src="images/trabajos-especiales-2.jpg" style="min-height: 300px; max-height: 300px; margin:0 auto;" src="images/trabajos-especiales-2.jpg">
+          </div><!-- end ngRepeat: image in line.images -->
+        </div>
+    <a class="left carousel-control-1" ng-click="prev()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control-1" ng-click="next()" ng-show="slides.length &gt; 1"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+      </div>
+    </div>
+    <div class="text-center" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
+      <div class="list-group">
+        <!-- ngRepeat: product in line.products -->
+      </div>
+    </div>
+  </div>
+</div>
+</product-line><!-- end ngRepeat: line in lineCtrl.allLines() -->
+  </div>
+</div>
+</div>
+    <app-footer><div class="nav navbar-inverse navbar-fixed-bottom">
+  <div class="container">
+    <company-footer><a class="navbar-text pull-left small-device" href="#!/contact">
+  <i class="fa fa-paperclip fa-lg"></i>
+</a>
+<div class="navbar-text pull-left big-device ng-binding">
+  <a href="#!/contact">
+    <i class="fa fa-paperclip fa-lg"></i>
+  </a>
+  Gabres S.L. - Plásticos Reforzados
+  <i class="fa fa-phone"></i> 965 105 963
+  <a href="mailto:info@prgabres.com" class="ng-binding"><i class="fa fa-envelope"></i> info@prgabres.com</a>
+</div>
+</company-footer>
+    <p class="navbar-text pull-right">
+      Copyright © 2014
+      <i class="fa fa-github fa-lg"></i>
+    </p>
+  </div>
+</div>
+</app-footer>
+
+    <!-- Scripts -->
+    <!-- <script src="http://maps.googleapis.com/maps/api/js?key=&amp;sensor=false&amp;extension=.js"></script> -->
+    <script src="lib.js"></script>
+    <script src="templates.js"></script>
+    <script src="app.js"></script>
+  
+<script type="text/javascript">document.write('<script src="' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1" type="text/javascript"><\/script>')</script><script src="http://localhost:35729/livereload.js?snipver=1" type="text/javascript"></script>
+
+
+</body></html>
