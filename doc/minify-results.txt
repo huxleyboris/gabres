@@ -1,0 +1,35 @@
+Antes de minify
+
+-rw-r--r--   1 miguel  staff   3.0K Apr 27 15:50 app.css
+-rw-r--r--   1 miguel  staff    22K Apr 27 15:50 app.js
+drwxr-xr-x   5 miguel  staff   170B Apr 27 15:50 bootstrapcss
+drwxr-xr-x   3 miguel  staff   102B Apr 27 15:50 facss
+-rw-r--r--   1 miguel  staff   1.1K Apr 27 15:50 favicon.ico
+drwxr-xr-x  11 miguel  staff   374B Apr 27 15:50 fonts
+drwxr-xr-x  30 miguel  staff   1.0K Apr 27 15:50 images
+-rw-r--r--   1 miguel  staff   1.0K Apr 27 15:50 index.html
+-rw-r--r--   1 miguel  staff   535B Apr 27 15:50 lib.css
+-rw-r--r--   1 miguel  staff   2.5M Apr 27 15:50 lib.js
+-rw-r--r--   1 miguel  staff    14K Apr 27 15:50 templates.js
+
+3 * 1024 + 22 * 1024 + 170 + 102 + 1.1 * 1024 + 374 + 1 * 1024 + 1 * 1024 + 535 + 2.5 * 1024 * 1024 + 14 * 1024
+2665731.4B = 2.539759337M
+
+Minify
+
+-rw-r--r--   1 miguel  staff   2.2K Apr 27 16:27 app.css
+-rw-r--r--   1 miguel  staff    15K Apr 27 16:27 app.js
+drwxr-xr-x   5 miguel  staff   170B Apr 27 16:27 bootstrapcss
+drwxr-xr-x   3 miguel  staff   102B Apr 27 16:27 facss
+-rw-r--r--   1 miguel  staff   1.1K Apr 27 16:27 favicon.ico
+drwxr-xr-x  11 miguel  staff   374B Apr 27 16:27 fonts
+drwxr-xr-x  30 miguel  staff   1.0K Apr 27 16:27 images
+-rw-r--r--   1 miguel  staff   1.0K Apr 27 16:27 index.html
+-rw-r--r--   1 miguel  staff   300B Apr 27 16:27 lib.css
+-rw-r--r--   1 miguel  staff   918K Apr 27 16:27 lib.js
+-rw-r--r--   1 miguel  staff    14K Apr 27 16:27 templates.js
+
+2.2 * 1024 + 15 * 1024 + 170 + 102 + 1.1 * 1024 + 374 + 1 * 1024 + 1 * 1024 + 300 + 918 * 1024 + 14 * 1024
+976101.2B = .930882645M
+
+Reducción de más del 63%
