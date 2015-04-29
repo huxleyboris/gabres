@@ -32,4 +32,24 @@ drwxr-xr-x  30 miguel  staff   1.0K Apr 27 16:27 images
 2.2 * 1024 + 15 * 1024 + 170 + 102 + 1.1 * 1024 + 374 + 1 * 1024 + 1 * 1024 + 300 + 918 * 1024 + 14 * 1024
 976101.2B = .930882645M
 
-Reducción de más del 63%
+=> Reducción de más del 63%
+
+Usando Bower main files + Minify
+
+-rw-r--r--   1 miguel  staff   2.2K Apr 29 18:42 app.css
+-rw-r--r--   1 miguel  staff    15K Apr 29 18:43 app.js
+drwxr-xr-x   5 miguel  staff   170B Apr 29 18:42 bootstrapcss
+drwxr-xr-x   3 miguel  staff   102B Apr 29 18:42 facss
+-rw-r--r--   1 miguel  staff   1.1K Apr 29 18:42 favicon.ico
+drwxr-xr-x  11 miguel  staff   374B Apr 29 18:42 fonts
+drwxr-xr-x  30 miguel  staff   1.0K Apr 29 18:42 images
+-rw-r--r--   1 miguel  staff   1.0K Apr 29 18:42 index.html
+-rw-r--r--   1 miguel  staff   124K Apr 29 18:42 lib.css
+-rw-r--r--   1 miguel  staff   459K Apr 29 18:42 lib.js
+-rw-r--r--   1 miguel  staff    14K Apr 29 18:42 templates.js
+
+2.2 * 1024 + 15 * 1024 + 170 + 102 + 1.1 * 1024 + 374 + 1 * 1024 + 1 * 1024 + 124 + 459 * 1024 + 14 * 1024
+505909.2B = .48247261
+
+=> Reducción de más del 81% (sobre el original)
+=> Reducción de más del 48% (sobre el primer minify)
