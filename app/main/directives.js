@@ -151,7 +151,7 @@
     })
     .directive('content', function($compile) {
       var linker = function(scope, element, attrs) {
-        attrs.template && element.html(attrs.template);
+        if (attrs.template) element.html(attrs.template);
         $compile(element.contents())(scope);
       };
 
