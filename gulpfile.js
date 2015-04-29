@@ -39,11 +39,11 @@ gulp.task('vendorJS', function() {
 
 gulp.task('vendorCSS', function(){
     //concatenate vendor CSS files
-    gulp.src(['!./bower_components/**/*.min.css',
-      '!./bower_components/font-awesome/css/font-awesome.css',
-      '!./bower_components/bootstrap/dist/css/bootstrap.css',
-      '!./bower_components/bootstrap/dist/css/bootstrap-theme.css',
-      './bower_components/**/*.css'])
+    gulp.src(mainBowerFiles([
+      '!font-awesome/css/font-awesome.css',
+      '!bootstrap/dist/css/bootstrap.css',
+      '!bootstrap/dist/css/bootstrap-theme.css',
+      '**/*.css']))
       .pipe(plugins.concat('lib.css'))
       .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest('./build'));
