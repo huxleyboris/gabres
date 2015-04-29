@@ -151,7 +151,8 @@
     })
     .directive('content', function($compile) {
       var linker = function(scope, element, attrs) {
-        element.html(attrs.template).show();
+	// TODO: Remove this code as it seems not to do anything, but introduce errors in the console
+        // element.html(attrs.template).show();
         $compile(element.contents())(scope);
       };
 
