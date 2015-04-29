@@ -53,6 +53,7 @@ gulp.task('faCSS', function(){
     //concatenate vendor CSS files
     gulp.src('./bower_components/font-awesome/css/font-awesome.css')
       .pipe(plugins.concat('fa.css'))
+      .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest('./build/facss'));
 });
 
@@ -60,6 +61,7 @@ gulp.task('glyphicons', function(){
   gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.css',
     './bower_components/bootstrap/dist/css/bootstrap-theme.css'])
     .pipe(plugins.concat('bootstrap.css'))
+     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(gulp.dest('./build/bootstrapcss'));
 });
 
