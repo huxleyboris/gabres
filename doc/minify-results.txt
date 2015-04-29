@@ -49,7 +49,7 @@ drwxr-xr-x  30 miguel  staff   1.0K Apr 29 18:42 images
 -rw-r--r--   1 miguel  staff    14K Apr 29 18:42 templates.js
 
 2.2 * 1024 + 15 * 1024 + 170 + 102 + 1.1 * 1024 + 374 + 1 * 1024 + 1 * 1024 + 124 + 459 * 1024 + 14 * 1024
-505909.2B = .48247261
+505909.2B = .48247261M
 
 => Reducción de más del 81% (sobre el original)
 => Reducción de más del 48% (sobre el primer minify)
