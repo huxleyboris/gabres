@@ -5,6 +5,10 @@ var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var mainBowerFiles = require('main-bower-files');
 
+var config = {
+	build: './build'
+}
+
 gulp.task('scripts', function(){
     //combine all js files of the app
     gulp.src(['!./app/**/*_test.js','./app/**/*.js'])
@@ -12,7 +16,7 @@ gulp.task('scripts', function(){
       .pipe(plugins.jshint.reporter('default'))
       .pipe(uglify({mangle: false}))
       .pipe(plugins.concat('app.js'))
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('templates',function(){
@@ -20,21 +24,21 @@ gulp.task('templates',function(){
     gulp.src(['!./app/index.html',
       './app/**/*.html'])
       .pipe(plugins.angularTemplatecache('templates.js',{standalone:true}))
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('css', function(){
     gulp.src('./app/**/*.css')
       .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(plugins.concat('app.css'))
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('vendorJS', function() {
     return gulp.src(mainBowerFiles('**/*.js'))
       .pipe(uglify({mangle: false}))
       .pipe(plugins.concat('lib.js'))
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('vendorCSS', function(){
@@ -46,7 +50,7 @@ gulp.task('vendorCSS', function(){
       '**/*.css']))
       .pipe(plugins.concat('lib.css'))
       .pipe(minifyCss({compatibility: 'ie8'}))
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('faCSS', function(){
@@ -54,7 +58,7 @@ gulp.task('faCSS', function(){
     gulp.src('./bower_components/font-awesome/css/font-awesome.css')
       .pipe(plugins.concat('fa.css'))
       .pipe(minifyCss({compatibility: 'ie8'}))
-      .pipe(gulp.dest('./build/facss'));
+      .pipe(gulp.dest(config.build + '/facss'));
 });
 
 gulp.task('glyphicons', function(){
@@ -62,33 +66,33 @@ gulp.task('glyphicons', function(){
     './bower_components/bootstrap/dist/css/bootstrap-theme.css'])
     .pipe(plugins.concat('bootstrap.css'))
      .pipe(minifyCss({compatibility: 'ie8'}))
-    .pipe(gulp.dest('./build/bootstrapcss'));
+    .pipe(gulp.dest(config.build + '/bootstrapcss'));
 });
 
 gulp.task('glyphmaps', function(){
   gulp.src(['./bower_components/bootstrap/dist/css/bootstrap-theme.css.map',
     './bower_components/bootstrap/dist/css/bootstrap.css.map'])
-    .pipe(gulp.dest('./build/bootstrapcss'));
+    .pipe(gulp.dest(config.build + '/bootstrapcss'));
 });
 
 gulp.task('fonts', function(){
     gulp.src(['./bower_components/font-awesome/fonts/*', './bower_components/bootstrap/fonts/*'])
-      .pipe(gulp.dest('./build/fonts'));
+      .pipe(gulp.dest(config.build + '/fonts'));
 });
 
 gulp.task('favicon', function(){
     gulp.src(['./app/favicon.ico'])
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('copy-index', function() {
     gulp.src('./app/index.html')
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest(config.build));
 });
 
 gulp.task('copy-images', function() {
   gulp.src('./app/assets/images/**')
-  .pipe(gulp.dest('./build/images'));
+  .pipe(gulp.dest(config.build + '/images'));
 });
 
 gulp.task('watch',function(){
@@ -117,7 +121,7 @@ gulp.task('connect', function() {
 });
 
 gulp.task('deploy', function() {
-    gulp.src('./build/**/*')
+    gulp.src(config.build + '/**/*')
       .pipe(deploy({
         cacheDir: '.temp'
       }));
