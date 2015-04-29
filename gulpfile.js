@@ -30,21 +30,6 @@ gulp.task('css', function(){
       .pipe(gulp.dest('./build'));
 });
 
-//gulp.task('vendorJS', function(){
-    ////concatenate vendor JS files
-    //gulp.src(['!./bower_components/**/*.min.js',
-      //'!./bower_components/**/gulpfile.js',
-      //'!./bower_components/**/gruntfile.js',
-      //'!./bower_components/**/Gruntfile.js',
-      //'!./bower_components/**/grunt/**.js',
-      //'!./bower_components/bootstrap/js/**.js',
-      //'!./bower_components/jquery/src/**/**.js',
-      //'./bower_components/**/*.js'])
-      //.pipe(uglify({mangle: false}))
-      //.pipe(plugins.concat('lib.js'))
-      //.pipe(gulp.dest('./build'));
-//});
-
 gulp.task('vendorJS', function() {
     return gulp.src(mainBowerFiles('**/*.js'))
       .pipe(uglify({mangle: false}))
