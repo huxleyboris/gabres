@@ -50,6 +50,7 @@ body {
   font-size: 20px;
   color: #000000;
   text-align: center;
+  cursor: pointer;
 }
 .carousel-control-1.left {
 }
