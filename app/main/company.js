@@ -3,7 +3,7 @@
 
   angular.module('gabres-company', [])
     .constant('company', {
-      name: 'Gabres S.L. - Plásticos Reforzados',
+      name: 'Gabres S.L.U. - Plásticos Reforzados',
       shortName: 'Gabres S.L.',
       physicalAddress: {
         street: 'Partida de Algorós',
