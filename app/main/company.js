@@ -14,7 +14,8 @@
         city: '(03080) ALICANTE'
       },
       emailAddress: 'info@prgabres.com',
-      phone: '965 105 963'
+      phone: '+34965105963',
+      phoneForShowing: '(+34) 965 105 963'
     })
     .constant('lines', [
       {
