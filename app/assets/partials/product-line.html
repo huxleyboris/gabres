@@ -17,6 +17,7 @@
     <div class="text-center" ng-class="{ 'col-md-4': lineCtrl.hasProducts(line) }">
       <div class="list-group">
         <a class="list-group-item" ng-repeat="product in line.products" ng-click="lineCtrl.open(product)">
+	  <span class="pull-right"><i class="fa fa-hand-o-up text-primary" ></i></span>
           <h5 class="list-group-item-heading">{{product.name}}</h5>
         </a>
       </div>
