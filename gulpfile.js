@@ -108,6 +108,7 @@ gulp.task('watch',function(){
     gulp.watch(['./app/**/*.js','!./app/**/*test.js'],['scripts']);
     gulp.watch(['!./app/index.html','./app/**/*.html'],['templates']);
     gulp.watch('./app/**/*.css',['css']);
+    gulp.watch('./app/assets/images/**',['copy-images']);
     gulp.watch('./app/index.html',['copy-index']);
 
 });
