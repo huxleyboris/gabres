@@ -15,7 +15,8 @@ gulp.task('scripts', function(){
     return gulp.src(['!./app/**/*_test.js','./app/**/*.js'])
       .pipe(plugins.jshint())
       .pipe(plugins.jshint.reporter('default'))
-      .pipe(plugins.uglify({mangle: false}))
+      .pipe(plugins.ngAnnotate())
+      .pipe(plugins.uglify({mangle: true}))
       .pipe(plugins.concat('app.js'))
       .pipe(gulp.dest(config.build));
 });
@@ -24,7 +25,9 @@ gulp.task('templates',function(){
     //combine all template files of the app into a js file
     return gulp.src(['!./app/index.html',
       './app/**/*.html'])
+      .pipe(plugins.minifyHtml())
       .pipe(plugins.angularTemplatecache('templates.js',{standalone:true}))
+      .pipe(plugins.uglify({mangle: true}))
       .pipe(gulp.dest(config.build));
 });
 
@@ -88,6 +91,7 @@ gulp.task('copy-favicons', function(){
 
 gulp.task('copy-index', function() {
     return gulp.src('./app/index.html')
+      .pipe(plugins.minifyHtml())
       .pipe(gulp.dest(config.build));
 });
 
