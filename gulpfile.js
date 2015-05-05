@@ -135,6 +135,10 @@ gulp.task('clean', function(callback) {
 
 gulp.task('build', ['scripts', 'copy-images', 'templates', 'fonts', 'glyphicons', 'glyphmaps', 'copy-favicons', 'css', 'copy-index', 'faCSS', 'vendorJS', 'vendorCSS']);
 
+gulp.task('cb', function(callback) {
+    runSequence('clean', 'build', callback);
+});
+
 gulp.task('default', function(callback) {
     runSequence(
       'clean',
