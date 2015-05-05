@@ -81,7 +81,7 @@ gulp.task('fonts', function(){
 });
 
 gulp.task('favicon', function(){
-    gulp.src(['./app/favicon.ico'])
+    gulp.src(['./app/assets/images/favicons/*'])
       .pipe(gulp.dest(config.build));
 });
 
