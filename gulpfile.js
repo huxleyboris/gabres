@@ -7,7 +7,8 @@ var del = require('del');
 var runSequence = require('run-sequence');
 
 var config = {
-	build: './build'
+	build: './build',
+	src: './app'
 };
 
 gulp.task('scripts', function(){
@@ -102,25 +103,25 @@ gulp.task('copy-images', function() {
 
 gulp.task('watch',function(){
     gulp.watch([
-        'build/**/*.html',
-        'build/**/*.js',
-        'build/**/*.css'
+        config.build + '/**/*.html',
+        config.build + '/**/*.js',
+        config.build + '/**/*.css'
         ], function(event) {
            return gulp.src(event.path)
               .pipe(plugins.connect.reload());
         });
 
-    gulp.watch(['./app/**/*.js','!./app/**/*test.js'],['scripts']);
-    gulp.watch(['!./app/index.html','./app/**/*.html'],['templates']);
-    gulp.watch('./app/**/*.css',['css']);
-    gulp.watch('./app/assets/images/**',['copy-images']);
-    gulp.watch('./app/assets/favicons/**',['copy-favicons']);
-    gulp.watch('./app/index.html',['copy-index']);
+    gulp.watch([config.src + '/**/*.js', '!' + config.src + '/**/*test.js'],['scripts']);
+    gulp.watch(['!' + config.src + '/index.html', config.src + '/**/*.html'],['templates']);
+    gulp.watch(config.src + '/**/*.css',['css']);
+    gulp.watch(config.src + '/assets/images/**',['copy-images']);
+    gulp.watch(config.src + '/assets/favicons/**',['copy-favicons']);
+    gulp.watch(config.src + '/index.html',['copy-index']);
 });
 
 gulp.task('connect', function() {
   plugins.connect.server({
-    root: ['build'],
+    root: [config.build],
     port: 9000,
     livereload: true
   });
