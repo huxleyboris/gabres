@@ -80,8 +80,8 @@ gulp.task('fonts', function(){
       .pipe(gulp.dest(config.build + '/fonts'));
 });
 
-gulp.task('favicon', function(){
-    gulp.src(['./app/assets/images/favicons/*'])
+gulp.task('copy-favicons', function(){
+    gulp.src(['./app/assets/favicons/*'])
       .pipe(gulp.dest(config.build));
 });
 
@@ -109,6 +109,7 @@ gulp.task('watch',function(){
     gulp.watch(['!./app/index.html','./app/**/*.html'],['templates']);
     gulp.watch('./app/**/*.css',['css']);
     gulp.watch('./app/assets/images/**',['copy-images']);
+    gulp.watch('./app/assets/favicons/**',['copy-favicons']);
     gulp.watch('./app/index.html',['copy-index']);
 
 });
@@ -128,5 +129,5 @@ gulp.task('deploy', function() {
       }));
 });
 
-gulp.task('build', ['scripts', 'copy-images', 'templates', 'fonts', 'glyphicons', 'glyphmaps', 'favicon', 'css', 'copy-index', 'faCSS', 'vendorJS', 'vendorCSS']);
+gulp.task('build', ['scripts', 'copy-images', 'templates', 'fonts', 'glyphicons', 'glyphmaps', 'copy-favicons', 'css', 'copy-index', 'faCSS', 'vendorJS', 'vendorCSS']);
 gulp.task('default', ['connect', 'build', 'watch']);
