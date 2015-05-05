@@ -86,12 +86,12 @@ gulp.task('fonts', function(){
 });
 
 gulp.task('copy-favicons', function(){
-    return gulp.src(['./app/assets/favicons/*'])
+    return gulp.src(config.src + '/assets/favicons/*')
       .pipe(gulp.dest(config.build));
 });
 
 gulp.task('copy-index', function() {
-    return gulp.src('./app/index.html')
+    return gulp.src(config.src + '/index.html')
       .pipe(plugins.minifyHtml())
       .pipe(gulp.dest(config.build));
 });
