@@ -141,8 +141,7 @@ gulp.task('default', function(callback) {
     runSequence(
       'clean',
       'build',
-      'connect', 
-      'watch',
+      ['connect', 'watch'],
       callback
     );
 });
