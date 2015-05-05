@@ -13,7 +13,7 @@ var config = {
 
 gulp.task('scripts', function(){
     //combine all js files of the app
-    return gulp.src(['!./app/**/*_test.js','./app/**/*.js'])
+    return gulp.src(['!' + config.src + '/**/*_test.js', config.src + '/**/*.js'])
       .pipe(plugins.jshint())
       .pipe(plugins.jshint.reporter('default'))
       .pipe(plugins.ngAnnotate())
@@ -24,8 +24,8 @@ gulp.task('scripts', function(){
 
 gulp.task('templates',function(){
     //combine all template files of the app into a js file
-    return gulp.src(['!./app/index.html',
-      './app/**/*.html'])
+    return gulp.src(['!' + config.src + '/index.html',
+      config.src + '/**/*.html'])
       .pipe(plugins.minifyHtml())
       .pipe(plugins.angularTemplatecache('templates.js',{standalone:true}))
       .pipe(plugins.uglify({mangle: true}))
@@ -33,7 +33,7 @@ gulp.task('templates',function(){
 });
 
 gulp.task('css', function(){
-    return gulp.src('./app/**/*.css')
+    return gulp.src(config.src + '/**/*.css')
       .pipe(plugins.minifyCss({compatibility: 'ie8'}))
       .pipe(plugins.concat('app.css'))
       .pipe(gulp.dest(config.build));
@@ -97,7 +97,7 @@ gulp.task('copy-index', function() {
 });
 
 gulp.task('copy-images', function() {
-  return gulp.src('./app/assets/images/**')
+  return gulp.src(config.src + '/assets/images/**')
      .pipe(gulp.dest(config.build + '/images'));
 });
 
@@ -154,7 +154,7 @@ gulp.task('default', function(callback) {
 });
 
 gulp.task('doc', function(){
-    gulp.src('./app/**/*.js')
+    gulp.src(config.src + '/**/*.js')
         .pipe(plugins.angularArchitectureGraph({
             dest: 'architecture'
         }));
