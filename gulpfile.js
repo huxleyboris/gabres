@@ -151,3 +151,10 @@ gulp.task('default', function(callback) {
       callback
     );
 });
+
+gulp.task('doc', function(){
+    gulp.src('./app/**/*.js')
+        .pipe(plugins.angularArchitectureGraph({
+            dest: 'architecture'
+        }));
+});
