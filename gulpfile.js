@@ -1,23 +1,21 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')({lazy:false});
 
-var deploy = require('gulp-gh-pages');
-var uglify = require('gulp-uglify');
-var minifyCss = require('gulp-minify-css');
+// Other plugins
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var runSequence = require('run-sequence');
 
 var config = {
 	build: './build'
-}
+};
 
 gulp.task('scripts', function(){
     //combine all js files of the app
     return gulp.src(['!./app/**/*_test.js','./app/**/*.js'])
       .pipe(plugins.jshint())
       .pipe(plugins.jshint.reporter('default'))
-      .pipe(uglify({mangle: false}))
+      .pipe(plugins.uglify({mangle: false}))
       .pipe(plugins.concat('app.js'))
       .pipe(gulp.dest(config.build));
 });
@@ -32,14 +30,14 @@ gulp.task('templates',function(){
 
 gulp.task('css', function(){
     return gulp.src('./app/**/*.css')
-      .pipe(minifyCss({compatibility: 'ie8'}))
+      .pipe(plugins.minifyCss({compatibility: 'ie8'}))
       .pipe(plugins.concat('app.css'))
       .pipe(gulp.dest(config.build));
 });
 
 gulp.task('vendorJS', function() {
     return gulp.src(mainBowerFiles('**/*.js'))
-      .pipe(uglify({mangle: false}))
+      .pipe(plugins.uglify({mangle: true}))
       .pipe(plugins.concat('lib.js'))
       .pipe(gulp.dest(config.build));
 });
@@ -52,7 +50,7 @@ gulp.task('vendorCSS', function(){
       '!bootstrap/dist/css/bootstrap-theme.css',
       '**/*.css']))
       .pipe(plugins.concat('lib.css'))
-      .pipe(minifyCss({compatibility: 'ie8'}))
+      .pipe(plugins.minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest(config.build));
 });
 
@@ -60,7 +58,7 @@ gulp.task('faCSS', function(){
     //concatenate vendor CSS files
     return gulp.src('./bower_components/font-awesome/css/font-awesome.css')
       .pipe(plugins.concat('fa.css'))
-      .pipe(minifyCss({compatibility: 'ie8'}))
+      .pipe(plugins.minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest(config.build + '/facss'));
 });
 
@@ -68,7 +66,7 @@ gulp.task('glyphicons', function(){
   return gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.css',
     './bower_components/bootstrap/dist/css/bootstrap-theme.css'])
     .pipe(plugins.concat('bootstrap.css'))
-     .pipe(minifyCss({compatibility: 'ie8'}))
+     .pipe(plugins.minifyCss({compatibility: 'ie8'}))
     .pipe(gulp.dest(config.build + '/bootstrapcss'));
 });
 
@@ -126,7 +124,7 @@ gulp.task('connect', function() {
 
 gulp.task('deploy', function() {
     return gulp.src(config.build + '/**/*')
-      .pipe(deploy({
+      .pipe(plugins.ghPages({
         cacheDir: '.temp'
       }));
 });
